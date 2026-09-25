@@ -64,6 +64,20 @@ init([]) ->
           restart => permanent,
           shutdown => 5000,
           type => worker,
+          modules => [evoq_event_handler]},
+        #{id => reading_started_v1_to_sqlite_readings,
+          start => {evoq_event_handler, start_link,
+                    [reading_started_v1_to_sqlite_readings, #{}]},
+          restart => permanent,
+          shutdown => 5000,
+          type => worker,
+          modules => [evoq_event_handler]},
+        #{id => reading_finished_v1_to_sqlite_readings,
+          start => {evoq_event_handler, start_link,
+                    [reading_finished_v1_to_sqlite_readings, #{}]},
+          restart => permanent,
+          shutdown => 5000,
+          type => worker,
           modules => [evoq_event_handler]}
     ]}}.
 
