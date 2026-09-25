@@ -44,6 +44,10 @@ a_member_registers_and_answers_by_id() ->
                             #{<<"name">> => <<"The Crooked Shelf">>,
                               <<"initiated_by">> => <<"raf">>}),
     ClubId = maps:get(<<"club_id">>, hd(maps:get(<<"events">>, ClubReply))),
+    %% The entry point's enrichment reads the club from the read model,
+    %% which is eventually consistent: await the projection's row before
+    %% registering, exactly as a careful client would.
+    {200, _} = await_http_get(["/api/clubs/", ClubId], 50),
     {200, MemberReply} = http_post("/api/members/register",
                               #{<<"club_id">> => ClubId,
                                 <<"name">> => <<"Bea">>}),
