@@ -33,6 +33,8 @@ execute(State, #{command_type := initiate_bookclub_v1} = Payload) ->
     guarded(State, Payload, fun maybe_initiate_bookclub:handle_from_map/2);
 execute(State, #{command_type := archive_bookclub_v1} = Payload) ->
     guarded(State, Payload, fun maybe_archive_bookclub:handle_from_map/2);
+execute(State, #{command_type := plan_party_v1} = Payload) ->
+    guarded(State, Payload, fun maybe_plan_party:handle_from_map/2);
 execute(_State, _Unknown) ->
     {error, unknown_command}.
 

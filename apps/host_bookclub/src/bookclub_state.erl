@@ -15,7 +15,7 @@
 -include("bookclub_status.hrl").
 
 -export([new/1, apply_event/2, to_map/1, from_map/1]).
--export([club_id/1, name/1, initiated_by/1, initiated_at/1]).
+-export([club_id/1, name/1, initiated_by/1, initiated_at/1, parties_planned/1]).
 -export([is_initiated/1, is_archived/1]).
 
 -record(bookclub_state, {
@@ -23,6 +23,7 @@
     name = <<>> :: binary(),
     initiated_by = <<>> :: binary(),
     initiated_at = 0 :: non_neg_integer(),
+    parties_planned = 0 :: non_neg_integer(),
     status = 0 :: non_neg_integer()
 }).
 
@@ -49,6 +50,10 @@ apply_event(State, #{event_type := <<"bookclub_initiated_v1">>} = Event) ->
 apply_event(State, #{event_type := <<"bookclub_archived_v1">>}) ->
     State#bookclub_state{
         status = evoq_bit_flags:set(State#bookclub_state.status, ?BOOKCLUB_ARCHIVED)};
+apply_event(State, #{event_type := <<"party_planned_v1">>} = Event) ->
+    Data = event_data(Event),
+    State#bookclub_state{
+        parties_planned = maps:get(parties_planned, Data, 0)};
 apply_event(State, _Event) ->
     State.
 
@@ -57,11 +62,13 @@ to_map(#bookclub_state{club_id = ClubId,
                        name = Name,
                        initiated_by = By,
                        initiated_at = At,
+                       parties_planned = Parties,
                        status = Status}) ->
     #{club_id => ClubId,
       name => Name,
       initiated_by => By,
       initiated_at => At,
+      parties_planned => Parties,
       status => Status}.
 
 -spec from_map(map()) -> {ok, t()} | {error, term()}.
@@ -71,6 +78,7 @@ from_map(#{club_id := ClubId} = Map) ->
         name = maps:get(name, Map, <<>>),
         initiated_by = maps:get(initiated_by, Map, <<>>),
         initiated_at = maps:get(initiated_at, Map, 0),
+        parties_planned = maps:get(parties_planned, Map, 0),
         status = maps:get(status, Map, 0)}};
 from_map(_) ->
     {error, missing_club_id}.
@@ -90,6 +98,10 @@ initiated_by(#bookclub_state{initiated_by = By}) ->
 -spec initiated_at(t()) -> non_neg_integer().
 initiated_at(#bookclub_state{initiated_at = At}) ->
     At.
+
+-spec parties_planned(t()) -> non_neg_integer().
+parties_planned(#bookclub_state{parties_planned = Parties}) ->
+    Parties.
 
 -spec is_initiated(t()) -> boolean().
 is_initiated(#bookclub_state{status = Status}) ->

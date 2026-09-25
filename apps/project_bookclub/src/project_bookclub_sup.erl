@@ -36,6 +36,20 @@ init([]) ->
           restart => permanent,
           shutdown => 5000,
           type => worker,
+          modules => [evoq_event_handler]},
+        #{id => member_registered_v1_to_sqlite_members,
+          start => {evoq_event_handler, start_link,
+                    [member_registered_v1_to_sqlite_members, #{}]},
+          restart => permanent,
+          shutdown => 5000,
+          type => worker,
+          modules => [evoq_event_handler]},
+        #{id => member_unregistered_v1_to_sqlite_members,
+          start => {evoq_event_handler, start_link,
+                    [member_unregistered_v1_to_sqlite_members, #{}]},
+          restart => permanent,
+          shutdown => 5000,
+          type => worker,
           modules => [evoq_event_handler]}
     ]}}.
 
