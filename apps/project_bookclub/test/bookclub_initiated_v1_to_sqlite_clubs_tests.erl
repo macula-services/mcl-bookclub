@@ -19,7 +19,8 @@ store_test_() ->
      fun stop_everything/1,
      [{timeout, 60, fun an_initiated_club_is_projected_to_sqlite/0},
       {timeout, 60, fun the_row_carries_the_applied_version_and_event_id/0},
-      {timeout, 60, fun reapplying_the_same_event_changes_nothing/0}]}.
+      {timeout, 60, fun reapplying_the_same_event_changes_nothing/0},
+      {timeout, 60, fun an_archived_club_moves_the_row_to_archived/0}]}.
 
 schema_contract_test_() ->
     [fun the_query_columns_are_all_in_the_prj_schema/0,
@@ -93,6 +94,24 @@ the_prj_division_imports_no_mesh_module() ->
                 end, erl_sources(repo_file("apps/project_bookclub/src")))
       end,
       [<<"macula">>, <<"mcl_om">>]).
+
+%% The two projections feed the same table in stream order: the archived
+%% event rewrites the row with the archived status and the NEW applied
+%% position (its own event id and version 1), all from its own payload --
+%% the initiated event never needs to have been seen.
+an_archived_club_moves_the_row_to_archived() ->
+    {ok, Cmd} = club(<<"To Be Archived">>),
+    {ok, 0, _} = maybe_initiate_bookclub:dispatch(Cmd),
+    ClubId = initiate_bookclub_v1:stream_id(Cmd),
+    await_row(ClubId, 100),
+    {ok, ArchiveCmd} = archive_bookclub_v1:new(#{club_id => ClubId,
+                                                archived_by => <<"raf">>}),
+    {ok, 1, _} = maybe_archive_bookclub:dispatch(ArchiveCmd),
+    [Stored | _] = lists:reverse(stream(ClubId)),
+    [ClubId, <<"To Be Archived">>, <<"archived">>, <<"bea">>, _At, EventId, 1] =
+        await_row(ClubId, 100),
+    ?assertEqual(Stored#event.event_id, EventId),
+    ?assertEqual(<<"bookclub_archived_v1">>, Stored#event.event_type).
 
 %%============================================================================
 %% Helpers

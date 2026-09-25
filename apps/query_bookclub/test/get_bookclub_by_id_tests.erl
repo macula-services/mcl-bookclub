@@ -13,6 +13,7 @@ store_test_() ->
      fun stop_store/1,
      [fun a_known_club_is_found/0,
       fun an_unknown_club_is_not_found/0,
+      fun an_archived_club_is_found_with_its_status/0,
       fun a_non_binary_id_is_refused/0]}.
 
 division_boundary_test_() ->
@@ -30,6 +31,15 @@ a_known_club_is_found() ->
 an_unknown_club_is_not_found() ->
     ?assertEqual({error, not_found},
                  get_bookclub_by_id:find(<<"bookclub-", (binary:copy(<<"b">>, 32))/binary>>)).
+
+%% An archived club is still answerable by id, with its status visible. The
+%% HIDING of archived clubs happens in the paged list desks (a later slice),
+%% not in the by-id lookup -- by-id says the truth about one stream.
+an_archived_club_is_found_with_its_status() ->
+    ClubId = seed_club(<<"Archived Shelf">>, <<"archived">>),
+    {ok, Club} = get_bookclub_by_id:find(ClubId),
+    ?assertEqual(<<"archived">>, maps:get(status, Club)),
+    ?assertEqual(<<"Archived Shelf">>, maps:get(name, Club)).
 
 a_non_binary_id_is_refused() ->
     ?assertEqual({error, missing_club_id}, get_bookclub_by_id:find("the-crooked-shelf")).
@@ -54,13 +64,19 @@ the_qry_division_imports_no_framework_or_mesh_module() ->
 %%============================================================================
 
 seed_club(Name) ->
-    ClubId = <<"bookclub-", (binary:copy(<<"a">>, 32))/binary>>,
+    seed_club(Name, <<"active">>).
+
+seed_club(Name, Status) ->
+    %% A fresh stream id per call: the clubs table persists across this
+    %% suite's tests, and the PK is the stream id.
+    ClubId = list_to_binary(
+               io_lib:format("bookclub-~32.16.0b", [erlang:unique_integer([positive])])),
     Sql = "INSERT INTO clubs (club_id, name, status, initiated_by,"
           " initiated_at, event_id, version)"
-          " VALUES (?, ?, 'active', ?, ?, ?, ?)",
+          " VALUES (?, ?, ?, ?, ?, ?, ?)",
     {ok, Conn} = esqlite3:open(filename:join(data_dir(), "bookclub.sqlite3")),
     ok = run_insert(Conn, Sql,
-                    [ClubId, Name, <<"bea">>, 42, <<"evt-1">>, 0]),
+                    [ClubId, Name, Status, <<"bea">>, 42, <<"evt-1">>, 0]),
     ClubId.
 
 run_insert(Conn, Sql, Args) ->

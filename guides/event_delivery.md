@@ -100,6 +100,15 @@ count = count + 1`). A projection that needs relative accumulation must track
 applied event ids instead — out of scope for this slice, and called out here
 so it is a choice, not an accident.
 
+**Events are self-contained facts.** `bookclub_archived_v1` echoes the club's
+name and birth details from the aggregate state, so its projection can
+rebuild the whole row from that event alone — it never needs the initiated
+event to have arrived first, in this process's history or at all. The
+alternative, a relative `UPDATE` that assumes the earlier event arrived, is
+the shape of the cardinal sin: it breaks silently the day a projection is
+added after history exists. When an event is too poor for its consumers,
+enrich it at the source — the aggregate has the state.
+
 ## The two checkpoint systems, and which is which
 
 | Checkpoint | Owner | Type | Meaning |

@@ -1,22 +1,18 @@
 %% @doc initiate_bookclub against a real reckon-db store through evoq.
 %%
-%% The store is opened with reckon_db_sup:start_store/1, the same call the
+%% The store is opened by host_bookclub_test_store with the same call the
 %% facade's boot makes for this service, so the dispatch, the aggregate, the
 %% event and its stream are the ones a running node has. The CMD division
-%% touches no mesh code -- not even in tests -- so the store is opened
-%% directly rather than through mcl_om.
+%% touches no mesh code -- not even in tests.
 -module(initiate_bookclub_tests).
 
 -include_lib("eunit/include/eunit.hrl").
--include_lib("reckon_db/include/reckon_db.hrl").
 -include_lib("reckon_gater/include/reckon_gater_types.hrl").
-
--define(STORE, mcl_bookclub_store).
 
 store_test_() ->
     {setup,
-     fun start_store/0,
-     fun stop_store/1,
+     fun host_bookclub_test_store:start/0,
+     fun host_bookclub_test_store:stop/1,
      [{timeout, 60, fun a_club_is_initiated_on_its_own_stream/0},
       {timeout, 60, fun a_second_initiation_is_refused/0},
       {timeout, 60, fun a_rejected_stream_id_never_touches_the_store/0}]}.
@@ -33,7 +29,7 @@ a_club_is_initiated_on_its_own_stream() ->
     {ok, 0, [Event]} = maybe_initiate_bookclub:dispatch(Cmd),
     ?assertMatch(#{name := <<"The Crooked Shelf">>,
                    initiated_by := <<"bea">>}, Event),
-    [Stored | _] = lists:reverse(stream(initiate_bookclub_v1:stream_id(Cmd))),
+    [Stored | _] = lists:reverse(host_bookclub_test_store:stream(initiate_bookclub_v1:stream_id(Cmd))),
     ?assertEqual(<<"bookclub_initiated_v1">>, Stored#event.event_type),
     ?assertMatch(#{name := <<"The Crooked Shelf">>}, Stored#event.data).
 
@@ -56,7 +52,8 @@ a_rejected_stream_id_never_touches_the_store() ->
                   #{club_id => <<"the-crooked-shelf">>,
                     name => <<"N">>, initiated_by => <<"bea">>}),
     ?assertMatch({error, _}, maybe_initiate_bookclub:dispatch(Cmd)),
-    ?assertError({invalid_stream_id, _}, stream(<<"the-crooked-shelf">>)).
+    ?assertError({invalid_stream_id, _},
+                 host_bookclub_test_store:stream(<<"the-crooked-shelf">>)).
 
 a_command_needs_every_field() ->
     ?assertEqual({error, missing_required_fields},
@@ -82,22 +79,29 @@ the_state_folds_both_event_shapes() ->
     S0 = bookclub_state:new(<<"bookclub-00">>),
     ?assertNot(bookclub_state:is_initiated(S0)),
     S1 = bookclub_state:apply_event(S0, #{event_type => <<"bookclub_initiated_v1">>,
-                                          name => <<"Inline">>}),
+                                          name => <<"Inline">>,
+                                          initiated_by => <<"bea">>,
+                                          initiated_at => 5}),
     ?assert(bookclub_state:is_initiated(S1)),
     ?assertEqual(<<"Inline">>, bookclub_state:name(S1)),
     S2 = bookclub_state:apply_event(bookclub_state:new(<<"bookclub-01">>),
                                     #{event_type => <<"bookclub_initiated_v1">>,
-                                      data => #{name => <<"Enveloped">>}}),
+                                      data => #{name => <<"Enveloped">>,
+                                                initiated_by => <<"bea">>,
+                                                initiated_at => 6}}),
     ?assert(bookclub_state:is_initiated(S2)),
     ?assertEqual(<<"Enveloped">>, bookclub_state:name(S2)).
 
 the_state_round_trips_through_a_map() ->
     S = bookclub_state:apply_event(bookclub_state:new(<<"bookclub-02">>),
                                    #{event_type => <<"bookclub_initiated_v1">>,
-                                     data => #{name => <<"Round Trip">>}}),
+                                     data => #{name => <<"Round Trip">>,
+                                               initiated_by => <<"bea">>,
+                                               initiated_at => 7}}),
     {ok, S2} = bookclub_state:from_map(bookclub_state:to_map(S)),
     ?assertEqual(<<"Round Trip">>, bookclub_state:name(S2)),
-    ?assert(bookclub_state:is_initiated(S2)).
+    ?assert(bookclub_state:is_initiated(S2)),
+    ?assertEqual(7, bookclub_state:initiated_at(S2)).
 
 %% The division boundary, as a mechanism rather than a convention: the CMD
 %% sources must not name a mesh or read-model module. Comments count --
@@ -124,40 +128,6 @@ club_with(ClubId) ->
     initiate_bookclub_v1:new(#{club_id => ClubId,
                                name => <<"The Crooked Shelf">>,
                                initiated_by => <<"bea">>}).
-
-stream(ClubId) ->
-    events(reckon_db_streams:read(?STORE, ClubId, 0, 1000, forward)).
-
-events({ok, Events}) -> Events;
-events({error, {stream_not_found, _}}) -> [];
-events({error, _} = Error) -> error(Error).
-
-start_store() ->
-    Dir = filename:join(["/tmp", "initiate_bookclub_tests",
-                         integer_to_list(erlang:unique_integer([positive]))]),
-    %% evoq may already be loaded in the eunit VM; either way it must accept
-    %% the env below.
-    load_app(evoq),
-    [ok = application:set_env(evoq, K, V)
-     || {K, V} <- [{event_store_adapter, reckon_evoq_adapter},
-                   {subscription_adapter, reckon_evoq_adapter},
-                   {snapshot_store_adapter, reckon_evoq_adapter},
-                   {store_id, ?STORE}]],
-    {ok, Started} = application:ensure_all_started([reckon_db, evoq, reckon_evoq]),
-    {ok, _} = reckon_db_sup:start_store(#store_config{store_id = ?STORE,
-                                                      data_dir = filename:join(Dir, "store"),
-                                                      mode = single}),
-    {Dir, Started}.
-
-stop_store({Dir, Started}) ->
-    [application:stop(App) || App <- lists:reverse(Started)],
-    file:del_dir_r(Dir).
-
-load_app(App) ->
-    case application:load(App) of
-        ok -> ok;
-        {error, {already_loaded, App}} -> ok
-    end.
 
 erl_sources(Dir) ->
     {ok, Entries} = file:list_dir(Dir),

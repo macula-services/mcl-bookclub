@@ -29,6 +29,13 @@ init([]) ->
           restart => permanent,
           shutdown => 5000,
           type => worker,
+          modules => [evoq_event_handler]},
+        #{id => bookclub_archived_v1_to_sqlite_clubs,
+          start => {evoq_event_handler, start_link,
+                    [bookclub_archived_v1_to_sqlite_clubs, #{}]},
+          restart => permanent,
+          shutdown => 5000,
+          type => worker,
           modules => [evoq_event_handler]}
     ]}}.
 
