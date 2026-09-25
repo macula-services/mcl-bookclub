@@ -27,7 +27,7 @@ start_listener() ->
 %% @doc The routes: the static UI, and one JSON API with the corpus's route
 %% shapes -- POST /api/{plural}/{verb} for commands, GET /api/{plural}/:id
 %% for reads.
--spec routes() -> cowboy_router:routes().
+-spec routes() -> [{string(), module(), term()}].
 routes() ->
     [{"/", cowboy_static, {priv_file, mcl_bookclub, "admin/index.html"}},
      {"/app.js", cowboy_static, {priv_file, mcl_bookclub, "admin/app.js"}},
