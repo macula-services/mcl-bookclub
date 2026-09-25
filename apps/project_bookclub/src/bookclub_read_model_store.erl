@@ -39,7 +39,16 @@ schema() ->
      " status        TEXT NOT NULL,"
      " registered_at INTEGER NOT NULL,"
      " event_id      TEXT NOT NULL,"
-     " version       INTEGER NOT NULL)"].
+     " version       INTEGER NOT NULL)",
+     "CREATE TABLE IF NOT EXISTS books ("
+     " book_id      TEXT PRIMARY KEY,"
+     " club_id      TEXT NOT NULL,"
+     " title        TEXT NOT NULL,"
+     " author       TEXT NOT NULL,"
+     " status       TEXT NOT NULL,"
+     " procured_at  INTEGER NOT NULL,"
+     " event_id     TEXT NOT NULL,"
+     " version      INTEGER NOT NULL)"].
 
 -spec start_link(string()) -> {ok, pid()} | {error, term()}.
 start_link(SqlitePath) ->

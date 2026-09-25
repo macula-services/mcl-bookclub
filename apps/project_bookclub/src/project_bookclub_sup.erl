@@ -50,6 +50,20 @@ init([]) ->
           restart => permanent,
           shutdown => 5000,
           type => worker,
+          modules => [evoq_event_handler]},
+        #{id => book_procured_v1_to_sqlite_books,
+          start => {evoq_event_handler, start_link,
+                    [book_procured_v1_to_sqlite_books, #{}]},
+          restart => permanent,
+          shutdown => 5000,
+          type => worker,
+          modules => [evoq_event_handler]},
+        #{id => book_retired_v1_to_sqlite_books,
+          start => {evoq_event_handler, start_link,
+                    [book_retired_v1_to_sqlite_books, #{}]},
+          restart => permanent,
+          shutdown => 5000,
+          type => worker,
           modules => [evoq_event_handler]}
     ]}}.
 
