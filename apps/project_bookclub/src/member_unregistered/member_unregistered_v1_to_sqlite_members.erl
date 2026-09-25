@@ -2,7 +2,8 @@
 %%
 %% Self-contained like the club's archived projection: the event echoes the
 %% member's club, name and registration time, so this write never depends
-%% on the registered event having arrived first.
+%% on the registered event having arrived first. The status string comes
+%% from member_status:to_string/1 -- never a literal of this file's own.
 -module(member_unregistered_v1_to_sqlite_members).
 
 -behaviour(evoq_event_handler).
@@ -21,10 +22,11 @@ handle_event(_EventType, Event, _Metadata, State) ->
     case bookclub_read_model_store:exec(
            "INSERT OR REPLACE INTO members"
            " (member_id, club_id, name, status, registered_at, event_id, version)"
-           " VALUES (?, ?, ?, 'unregistered', ?, ?, ?)",
+           " VALUES (?, ?, ?, ?, ?, ?, ?)",
            [maps:get(member_id, Data),
             maps:get(club_id, Data),
             maps:get(name, Data),
+            member_status:to_string(member_status:unregistered()),
             maps:get(registered_at, Data),
             maps:get(event_id, Event),
             maps:get(version, Event, 0)]) of

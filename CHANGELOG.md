@@ -7,6 +7,19 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- The readable status strings now live with their flags: each aggregate's
+  `{aggregate}_status` module owns a flag map and `to_string/1` (rendered
+  through `evoq_bit_flags:to_string/2`), and the projections take each
+  status string from there instead of spelling SQL literals -- Demon 68
+  in the corpus. The PRJ boundary test now refuses a quoted status literal
+  in any projection source, and `project_bookclub` deliberately does NOT
+  declare the CMD app as an application dependency: reading a flag map is
+  a pure call (a loaded module, not a booted app -- declaring the dep
+  boots the mesh emitters into the projection test env and stalls the
+  `$all` delivery).
+
 ### Added
 
 - The LAN admin UI: a task-based operator console (static page + JSON API)

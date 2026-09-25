@@ -1,11 +1,12 @@
 %% @doc Projects bookclub_archived_v1 into the clubs table.
 %%
 %% The same idempotent shape as the initiated projection: INSERT OR REPLACE
-%% keyed on the stream id, status computed here as the readable string, and
-%% the row carrying the applied position (event_id, version). Because the
-%% archived event is self-contained -- it echoes name, initiated_by and
-%% initiated_at -- this write does not depend on the initiated event having
-%% arrived first, in this process's history or at all.
+%% keyed on the stream id, the row carrying the applied position (event_id,
+%% version), and the status string taken from bookclub_status:to_string/1 --
+%% never a literal of this file's own. Because the archived event is
+%% self-contained -- it echoes name, initiated_by and initiated_at -- this
+%% write does not depend on the initiated event having arrived first, in
+%% this process's history or at all.
 -module(bookclub_archived_v1_to_sqlite_clubs).
 
 -behaviour(evoq_event_handler).
@@ -24,9 +25,10 @@ handle_event(_EventType, Event, _Metadata, State) ->
     case bookclub_read_model_store:exec(
            "INSERT OR REPLACE INTO clubs"
            " (club_id, name, status, initiated_by, initiated_at, event_id, version)"
-           " VALUES (?, ?, 'archived', ?, ?, ?, ?)",
+           " VALUES (?, ?, ?, ?, ?, ?, ?)",
            [maps:get(club_id, Data),
             maps:get(name, Data),
+            bookclub_status:to_string(bookclub_status:archived()),
             maps:get(initiated_by, Data),
             maps:get(initiated_at, Data),
             maps:get(event_id, Event),

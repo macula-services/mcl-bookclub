@@ -3,7 +3,8 @@
 %% The fold, made safe: the finished event echoes the member, the book and
 %% the start time, so this write rebuilds the whole row from its own
 %% payload -- an absolute, idempotent write that never depends on the
-%% started event having arrived first.
+%% started event having arrived first. The status string comes from
+%% reading_status:to_string/1 -- never a literal of this file's own.
 -module(reading_finished_v1_to_sqlite_readings).
 
 -behaviour(evoq_event_handler).
@@ -23,10 +24,11 @@ handle_event(_EventType, Event, _Metadata, State) ->
            "INSERT OR REPLACE INTO readings"
            " (reading_id, member_id, book_id, status, started_at, pages_read,"
            "  finished_at, event_id, version)"
-           " VALUES (?, ?, ?, 'finished', ?, ?, ?, ?, ?)",
+           " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
            [maps:get(reading_id, Data),
             maps:get(member_id, Data),
             maps:get(book_id, Data),
+            reading_status:to_string(reading_status:finished()),
             maps:get(started_at, Data),
             maps:get(pages_read, Data),
             maps:get(finished_at, Data),

@@ -22,7 +22,32 @@ store_test_() ->
 
 schema_contract_test_() ->
     [fun the_query_columns_are_all_in_the_prj_schema/0,
-     fun the_prj_division_imports_no_mesh_module/0].
+     fun the_prj_division_imports_no_mesh_module/0,
+     fun the_prj_division_writes_no_status_literal/0].
+
+%% The Demon 68 boundary, as a mechanism: a readable-status literal
+%% spelled out as a single-quoted SQL value ('active', 'archived',
+%% 'on_shelf', 'retired', 'in_progress', 'finished', 'unregistered') in
+%% any PRJ source is the relapse -- the projections must take each status
+%% string from the CMD status module's flag map, never spell one out
+%% here. Only the QUOTED forms count: the bare words legitimately appear
+%% in event-type names ("book_retired_v1") and column names
+%% ("finished_at"); a status VALUE is always a quoted literal. Comments
+%% count too: naming the literal in prose is how the drift starts.
+the_prj_division_writes_no_status_literal() ->
+    lists:foreach(
+      fun(Src) ->
+              {ok, Text} = file:read_file(Src),
+              lists:foreach(
+                fun(Literal) ->
+                        ?assertEqual(nomatch, binary:match(Text, Literal),
+                                     {status_literal_in_prj_source, Literal, Src})
+                end,
+                [<<"'active'">>, <<"\"active\"">>, <<"'archived'">>,
+                 <<"'on_shelf'">>, <<"'retired'">>, <<"'in_progress'">>,
+                 <<"'finished'">>, <<"'unregistered'">>])
+      end, project_bookclub_test_env:erl_sources(
+             project_bookclub_test_env:repo_file("apps/project_bookclub/src"))).
 
 an_initiated_club_is_projected_to_sqlite() ->
     {ok, Cmd} = club(<<"The Crooked Shelf">>),

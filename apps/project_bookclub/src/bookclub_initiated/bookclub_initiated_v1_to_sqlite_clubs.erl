@@ -13,8 +13,10 @@
 %%   this event.
 %% - The row carries event_id and version, the applied position, saved WITH
 %%   the projected data in the same statement.
-%% - status is computed HERE, at projection time, as the readable string the
-%%   query desks will hand out. The raw bit flags never leave the CMD state.
+%% - The status string is NOT a literal of this file's own: it comes from
+%%   bookclub_status:to_string/1, the flag map the status module owns --
+%%   the raw bit flags never leave the CMD division, and neither do the
+%%   names (Demon 68).
 -module(bookclub_initiated_v1_to_sqlite_clubs).
 
 -behaviour(evoq_event_handler).
@@ -33,9 +35,10 @@ handle_event(_EventType, Event, _Metadata, State) ->
     case bookclub_read_model_store:exec(
            "INSERT OR REPLACE INTO clubs"
            " (club_id, name, status, initiated_by, initiated_at, event_id, version)"
-           " VALUES (?, ?, 'active', ?, ?, ?, ?)",
+           " VALUES (?, ?, ?, ?, ?, ?, ?)",
            [maps:get(club_id, Data),
             maps:get(name, Data),
+            bookclub_status:to_string(bookclub_status:initiated()),
             maps:get(initiated_by, Data),
             maps:get(initiated_at, Data),
             maps:get(event_id, Event),
