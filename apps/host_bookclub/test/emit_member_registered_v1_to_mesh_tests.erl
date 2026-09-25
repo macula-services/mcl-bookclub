@@ -63,7 +63,11 @@ a_retired_book_is_published_as_a_fact() ->
     ?assertEqual(<<"io.macula/mcl-bookclub/bookclub/book/book_retired_v1">>,
                  Topic),
     ?assertEqual({text, <<"raf">>}, maps:get(retired_by, Fact)),
-    ?assertEqual({text, <<"Project Hail Mary">>}, maps:get(title, Fact)).
+    ?assertEqual({text, <<"Project Hail Mary">>}, maps:get(title, Fact)),
+    %% The retired fact echoes procured_at, so a consumer's retire write can
+    %% be an absolute REPLACE of the whole row, never a partial UPDATE that
+    %% assumes the procured fact arrived first.
+    ?assert(is_integer(maps:get(procured_at, Fact))).
 
 %% A side-effect handler must refuse replays, or a restart re-publishes the
 %% whole history. The mechanism is the declared policy, asserted here so a

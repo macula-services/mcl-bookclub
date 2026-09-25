@@ -24,7 +24,8 @@
 
 -define(MEMBER_FIELDS, [member_id, club_id, name, registered_at]).
 -define(BOOK_FIELDS, [book_id, club_id, title, author, procured_at]).
--define(RETIRED_FIELDS, [book_id, club_id, title, author, retired_by, retired_at]).
+-define(RETIRED_FIELDS, [book_id, club_id, title, author, procured_at,
+                         retired_by, retired_at]).
 
 %% @doc The fact for a registered event, whose keys may be atoms or binaries
 %% (an event read back from the store is binary-keyed).
