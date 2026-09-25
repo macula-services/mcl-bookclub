@@ -8,12 +8,14 @@
 -behaviour(evoq_command).
 
 -export([command_type/0, new/1, to_map/1, validate/1, from_map/1]).
--export([mint_member_id/0, stream_id/1, get_member_id/1, get_club_id/1, get_name/1]).
+-export([mint_member_id/0, stream_id/1, get_member_id/1, get_club_id/1,
+         get_name/1, get_club_name/1]).
 
 -record(register_member, {
     member_id :: binary(),
     club_id :: binary(),
-    name :: binary()
+    name :: binary(),
+    club_name = <<>> :: binary()
 }).
 
 -opaque t() :: #register_member{}.
@@ -30,17 +32,19 @@ mint_member_id() ->
     reckon_gater_stream_id:new(<<"member">>).
 
 -spec new(map()) -> {ok, t()} | {error, term()}.
-new(#{member_id := MemberId, club_id := ClubId, name := Name}) ->
+new(#{member_id := MemberId, club_id := ClubId, name := Name} = Params) ->
     record_when(is_binary(MemberId), MemberId =/= <<>>,
                 is_binary(ClubId), ClubId =/= <<>>,
                 is_binary(Name), Name =/= <<>>,
-                MemberId, ClubId, Name);
+                MemberId, ClubId, Name,
+                maps:get(club_name, Params, <<>>));
 new(_) ->
     {error, missing_required_fields}.
 
-record_when(true, true, true, true, true, true, MemberId, ClubId, Name) ->
-    {ok, #register_member{member_id = MemberId, club_id = ClubId, name = Name}};
-record_when(_, _, _, _, _, _, _, _, _) ->
+record_when(true, true, true, true, true, true, MemberId, ClubId, Name, ClubName) ->
+    {ok, #register_member{member_id = MemberId, club_id = ClubId,
+                          name = Name, club_name = ClubName}};
+record_when(_, _, _, _, _, _, _, _, _, _) ->
     {error, invalid_params}.
 
 %% @doc Checks about the world, not the shape: both stream ids must satisfy
@@ -58,15 +62,18 @@ validate(#register_member{member_id = MemberId, club_id = ClubId}) ->
     end.
 
 -spec to_map(t()) -> map().
-to_map(#register_member{member_id = MemberId, club_id = ClubId, name = Name}) ->
+to_map(#register_member{member_id = MemberId, club_id = ClubId,
+                        name = Name, club_name = ClubName}) ->
     #{command_type => command_type(),
       member_id => MemberId,
       club_id => ClubId,
-      name => Name}.
+      name => Name,
+      club_name => ClubName}.
 
 -spec from_map(map()) -> {ok, t()} | {error, term()}.
-from_map(#{member_id := MemberId, club_id := ClubId, name := Name}) ->
-    new(#{member_id => MemberId, club_id => ClubId, name => Name});
+from_map(#{member_id := MemberId, club_id := ClubId, name := Name} = Map) ->
+    new(#{member_id => MemberId, club_id => ClubId, name => Name,
+          club_name => maps:get(club_name, Map, <<>>)});
 from_map(_) ->
     {error, missing_required_fields}.
 
@@ -86,3 +93,7 @@ get_club_id(#register_member{club_id = ClubId}) ->
 -spec get_name(t()) -> binary().
 get_name(#register_member{name = Name}) ->
     Name.
+
+-spec get_club_name(t()) -> binary().
+get_club_name(#register_member{club_name = ClubName}) ->
+    ClubName.

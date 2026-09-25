@@ -47,7 +47,11 @@ a_member_registers_and_answers_by_id() ->
     {200, MemberReply} = http_post("/api/members/register",
                               #{<<"club_id">> => ClubId,
                                 <<"name">> => <<"Bea">>}),
-    MemberId = maps:get(<<"member_id">>, hd(maps:get(<<"events">>, MemberReply))),
+    MemberEvent = hd(maps:get(<<"events">>, MemberReply)),
+    MemberId = maps:get(<<"member_id">>, MemberEvent),
+    %% The entry point stamps the club's NAME into the command, so the
+    %% event -- and the fact a consumer receives -- says which club.
+    ?assertEqual(<<"The Crooked Shelf">>, maps:get(<<"club_name">>, MemberEvent)),
     {200, Member} = await_http_get(["/api/members/", MemberId], 50),
     ?assertEqual(<<"Bea">>, maps:get(<<"name">>, Member)).
 

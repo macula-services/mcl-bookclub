@@ -15,7 +15,8 @@ handle_with(BookId, Params) ->
     case procure_book_v1:new(#{book_id => BookId,
                                club_id => maps:get(club_id, Params, undefined),
                                title => maps:get(title, Params, undefined),
-                               author => maps:get(author, Params, undefined)}) of
+                               author => maps:get(author, Params, undefined),
+                               club_name => maps:get(club_name, Params, <<>>)}) of
         {ok, Cmd} -> maybe_procure_book:dispatch(Cmd);
         {error, _} = Error -> Error
     end.

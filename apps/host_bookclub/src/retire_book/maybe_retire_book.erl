@@ -43,6 +43,7 @@ events(State, Cmd) ->
         title => book_state:title(State),
         author => book_state:author(State),
         procured_at => book_state:procured_at(State),
+        club_name => book_state:club_name(State),
         retired_by => retire_book_v1:get_retired_by(Cmd)}),
     {ok, [book_retired_v1:to_map(Event)]}.
 

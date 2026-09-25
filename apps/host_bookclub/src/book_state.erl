@@ -10,7 +10,7 @@
 -include("book_status.hrl").
 
 -export([new/1, apply_event/2, to_map/1, from_map/1]).
--export([book_id/1, club_id/1, title/1, author/1, procured_at/1]).
+-export([book_id/1, club_id/1, title/1, author/1, procured_at/1, club_name/1]).
 -export([is_on_shelf/1, is_retired/1]).
 
 -record(book_state, {
@@ -19,6 +19,7 @@
     title = <<>> :: binary(),
     author = <<>> :: binary(),
     procured_at = 0 :: non_neg_integer(),
+    club_name = <<>> :: binary(),
     status = 0 :: non_neg_integer()
 }).
 
@@ -40,6 +41,7 @@ apply_event(State, #{event_type := <<"book_procured_v1">>} = Event) ->
         title = maps:get(title, Data),
         author = maps:get(author, Data),
         procured_at = maps:get(procured_at, Data, 0),
+        club_name = maps:get(club_name, Data, <<>>),
         status = evoq_bit_flags:set(State#book_state.status, ?BOOK_ON_SHELF)};
 apply_event(State, #{event_type := <<"book_retired_v1">>}) ->
     State#book_state{
@@ -53,12 +55,14 @@ to_map(#book_state{book_id = BookId,
                    title = Title,
                    author = Author,
                    procured_at = At,
+                   club_name = ClubName,
                    status = Status}) ->
     #{book_id => BookId,
       club_id => ClubId,
       title => Title,
       author => Author,
       procured_at => At,
+      club_name => ClubName,
       status => Status}.
 
 -spec from_map(map()) -> {ok, t()} | {error, term()}.
@@ -69,6 +73,7 @@ from_map(#{book_id := BookId} = Map) ->
         title = maps:get(title, Map, <<>>),
         author = maps:get(author, Map, <<>>),
         procured_at = maps:get(procured_at, Map, 0),
+        club_name = maps:get(club_name, Map, <<>>),
         status = maps:get(status, Map, 0)}};
 from_map(_) ->
     {error, missing_book_id}.
@@ -92,6 +97,10 @@ author(#book_state{author = Author}) ->
 -spec procured_at(t()) -> non_neg_integer().
 procured_at(#book_state{procured_at = At}) ->
     At.
+
+-spec club_name(t()) -> binary().
+club_name(#book_state{club_name = ClubName}) ->
+    ClubName.
 
 -spec is_on_shelf(t()) -> boolean().
 is_on_shelf(#book_state{status = Status}) ->

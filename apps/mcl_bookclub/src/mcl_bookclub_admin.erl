@@ -67,11 +67,11 @@ dispatch(<<"POST">>, [<<"clubs">>, <<"archive">>], Params) ->
 dispatch(<<"POST">>, [<<"clubs">>, <<"plan_party">>], Params) ->
     result(plan_party_api:handle(Params));
 dispatch(<<"POST">>, [<<"members">>, <<"register">>], Params) ->
-    result(register_member_api:handle(Params));
+    result(register_member_api:handle(enrich_club_name(Params)));
 dispatch(<<"POST">>, [<<"members">>, <<"unregister">>], Params) ->
     result(unregister_member_api:handle(Params));
 dispatch(<<"POST">>, [<<"books">>, <<"procure">>], Params) ->
-    result(procure_book_api:handle(Params));
+    result(procure_book_api:handle(enrich_club_name(Params)));
 dispatch(<<"POST">>, [<<"books">>, <<"retire">>], Params) ->
     result(retire_book_api:handle(Params));
 dispatch(<<"POST">>, [<<"readings">>, <<"start">>], Params) ->
@@ -91,6 +91,21 @@ dispatch(<<"GET">>, [<<"readings">>, Id], _) ->
     found(get_reading_by_id:find(Id));
 dispatch(_, _, _) ->
     {404, #{error => not_found}}.
+
+%% The entry point is where a command payload MAY consult the read model
+%% (the corpus's one sanctioned place): the operator names a club by id,
+%% and the facade stamps the club's NAME into the command so the fact a
+%% downstream consumer receives is self-contained -- a thousand clubs on
+%% one topic, each fact saying which club it belongs to.
+enrich_club_name(#{club_name := _} = Params) ->
+    Params;
+enrich_club_name(#{club_id := ClubId} = Params) ->
+    case get_bookclub_by_id:find(ClubId) of
+        {ok, Club} -> Params#{club_name => maps:get(name, Club, <<>>)};
+        {error, _} -> Params
+    end;
+enrich_club_name(Params) ->
+    Params.
 
 result({ok, Version, Events}) ->
     {200, #{ok => true, version => Version, events => Events}};

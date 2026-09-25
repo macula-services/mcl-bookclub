@@ -14,7 +14,8 @@ handle(Params) ->
 handle_with(MemberId, Params) ->
     case register_member_v1:new(#{member_id => MemberId,
                                   club_id => maps:get(club_id, Params, undefined),
-                                  name => maps:get(name, Params, undefined)}) of
+                                  name => maps:get(name, Params, undefined),
+                                  club_name => maps:get(club_name, Params, <<>>)}) of
         {ok, Cmd} -> maybe_register_member:dispatch(Cmd);
         {error, _} = Error -> Error
     end.

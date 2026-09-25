@@ -14,6 +14,7 @@
     club_id :: binary(),
     title :: binary(),
     author :: binary(),
+    club_name :: binary(),
     procured_at :: integer()
 }).
 
@@ -24,13 +25,14 @@
 event_type() -> <<"book_procured_v1">>.
 
 -spec new(map()) -> {ok, t()} | {error, term()}.
-new(#{book_id := BookId, club_id := ClubId, title := Title, author := Author})
+new(#{book_id := BookId, club_id := ClubId, title := Title, author := Author} = Params)
         when is_binary(BookId), is_binary(ClubId),
              is_binary(Title), is_binary(Author) ->
     {ok, #book_procured{book_id = BookId,
                         club_id = ClubId,
                         title = Title,
                         author = Author,
+                        club_name = maps:get(club_name, Params, <<>>),
                         procured_at = erlang:system_time(millisecond)}};
 new(_) ->
     {error, missing_required_fields}.
@@ -40,12 +42,14 @@ to_map(#book_procured{book_id = BookId,
                       club_id = ClubId,
                       title = Title,
                       author = Author,
+                      club_name = ClubName,
                       procured_at = At}) ->
     #{event_type => event_type(),
       book_id => BookId,
       club_id => ClubId,
       title => Title,
       author => Author,
+      club_name => ClubName,
       procured_at => At}.
 
 -spec from_map(map()) -> {ok, t()} | {error, term()}.
@@ -55,6 +59,7 @@ from_map(#{book_id := BookId} = Map) ->
         club_id = maps:get(club_id, Map, <<>>),
         title = maps:get(title, Map, <<>>),
         author = maps:get(author, Map, <<>>),
+        club_name = maps:get(club_name, Map, <<>>),
         procured_at = maps:get(procured_at, Map, 0)}};
 from_map(_) ->
     {error, missing_required_fields}.

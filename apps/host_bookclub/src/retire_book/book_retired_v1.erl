@@ -18,6 +18,7 @@
     title :: binary(),
     author :: binary(),
     procured_at :: non_neg_integer(),
+    club_name :: binary(),
     retired_by :: binary(),
     retired_at :: integer()
 }).
@@ -30,7 +31,7 @@ event_type() -> <<"book_retired_v1">>.
 
 -spec new(map()) -> {ok, t()} | {error, term()}.
 new(#{book_id := BookId, club_id := ClubId, title := Title, author := Author,
-      procured_at := ProcuredAt, retired_by := By})
+      procured_at := ProcuredAt, retired_by := By} = Params)
         when is_binary(BookId), is_binary(ClubId), is_binary(Title),
              is_binary(Author), is_integer(ProcuredAt), is_binary(By) ->
     {ok, #book_retired{book_id = BookId,
@@ -38,6 +39,7 @@ new(#{book_id := BookId, club_id := ClubId, title := Title, author := Author,
                        title = Title,
                        author = Author,
                        procured_at = ProcuredAt,
+                       club_name = maps:get(club_name, Params, <<>>),
                        retired_by = By,
                        retired_at = erlang:system_time(millisecond)}};
 new(_) ->
@@ -49,6 +51,7 @@ to_map(#book_retired{book_id = BookId,
                      title = Title,
                      author = Author,
                      procured_at = ProcuredAt,
+                     club_name = ClubName,
                      retired_by = By,
                      retired_at = At}) ->
     #{event_type => event_type(),
@@ -57,6 +60,7 @@ to_map(#book_retired{book_id = BookId,
       title => Title,
       author => Author,
       procured_at => ProcuredAt,
+      club_name => ClubName,
       retired_by => By,
       retired_at => At}.
 
@@ -68,6 +72,7 @@ from_map(#{book_id := BookId} = Map) ->
         title = maps:get(title, Map, <<>>),
         author = maps:get(author, Map, <<>>),
         procured_at = maps:get(procured_at, Map, 0),
+        club_name = maps:get(club_name, Map, <<>>),
         retired_by = maps:get(retired_by, Map, <<>>),
         retired_at = maps:get(retired_at, Map, 0)}};
 from_map(_) ->

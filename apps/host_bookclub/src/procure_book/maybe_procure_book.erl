@@ -41,7 +41,8 @@ events(Cmd) ->
         book_id => procure_book_v1:get_book_id(Cmd),
         club_id => procure_book_v1:get_club_id(Cmd),
         title => procure_book_v1:get_title(Cmd),
-        author => procure_book_v1:get_author(Cmd)}),
+        author => procure_book_v1:get_author(Cmd),
+        club_name => procure_book_v1:get_club_name(Cmd)}),
     {ok, [book_procured_v1:to_map(Event)]}.
 
 %% @doc Procure the book on its own stream in mcl_bookclub_store.

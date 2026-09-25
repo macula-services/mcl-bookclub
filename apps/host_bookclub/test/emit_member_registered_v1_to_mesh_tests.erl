@@ -25,12 +25,16 @@ a_registered_member_is_published_as_a_fact() ->
     {ok, Cmd} = register_member_v1:new(
                   #{member_id => register_member_v1:mint_member_id(),
                     club_id => ClubId,
-                    name => <<"Bea">>}),
+                    name => <<"Bea">>,
+                    club_name => <<"The Crooked Shelf">>}),
     {ok, 0, _} = maybe_register_member:dispatch(Cmd),
     {Topic, Fact} = await_publish(<<"member_registered">>, 100),
     ?assertEqual(<<"io.macula/mcl-bookclub/bookclub/member/member_registered_v1">>,
                  Topic),
     ?assertEqual({text, ClubId}, maps:get(club_id, Fact)),
+    %% The fact names its club: one topic, a thousand clubs, each fact
+    %% saying which one it belongs to.
+    ?assertEqual({text, <<"The Crooked Shelf">>}, maps:get(club_name, Fact)),
     ?assertEqual({text, <<"Bea">>}, maps:get(name, Fact)),
     ?assertMatch({text, _}, maps:get(member_id, Fact)).
 

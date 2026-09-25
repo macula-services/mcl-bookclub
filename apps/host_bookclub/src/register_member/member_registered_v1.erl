@@ -14,6 +14,7 @@
     member_id :: binary(),
     club_id :: binary(),
     name :: binary(),
+    club_name :: binary(),
     registered_at :: integer()
 }).
 
@@ -24,11 +25,12 @@
 event_type() -> <<"member_registered_v1">>.
 
 -spec new(map()) -> {ok, t()} | {error, term()}.
-new(#{member_id := MemberId, club_id := ClubId, name := Name})
+new(#{member_id := MemberId, club_id := ClubId, name := Name} = Params)
         when is_binary(MemberId), is_binary(ClubId), is_binary(Name) ->
     {ok, #member_registered{member_id = MemberId,
                             club_id = ClubId,
                             name = Name,
+                            club_name = maps:get(club_name, Params, <<>>),
                             registered_at = erlang:system_time(millisecond)}};
 new(_) ->
     {error, missing_required_fields}.
@@ -37,11 +39,13 @@ new(_) ->
 to_map(#member_registered{member_id = MemberId,
                           club_id = ClubId,
                           name = Name,
+                          club_name = ClubName,
                           registered_at = At}) ->
     #{event_type => event_type(),
       member_id => MemberId,
       club_id => ClubId,
       name => Name,
+      club_name => ClubName,
       registered_at => At}.
 
 -spec from_map(map()) -> {ok, t()} | {error, term()}.
@@ -50,6 +54,7 @@ from_map(#{member_id := MemberId} = Map) ->
         member_id = MemberId,
         club_id = maps:get(club_id, Map, <<>>),
         name = maps:get(name, Map, <<>>),
+        club_name = maps:get(club_name, Map, <<>>),
         registered_at = maps:get(registered_at, Map, 0)}};
 from_map(_) ->
     {error, missing_required_fields}.

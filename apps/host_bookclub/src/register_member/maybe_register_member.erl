@@ -40,7 +40,8 @@ events(Cmd) ->
     {ok, Event} = member_registered_v1:new(#{
         member_id => register_member_v1:get_member_id(Cmd),
         club_id => register_member_v1:get_club_id(Cmd),
-        name => register_member_v1:get_name(Cmd)}),
+        name => register_member_v1:get_name(Cmd),
+        club_name => register_member_v1:get_club_name(Cmd)}),
     {ok, [member_registered_v1:to_map(Event)]}.
 
 %% @doc Register the member on its own stream in mcl_bookclub_store.

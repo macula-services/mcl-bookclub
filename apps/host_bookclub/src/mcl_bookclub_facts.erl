@@ -5,7 +5,9 @@
 %%   book_retired_v1     on `<realm>/mcl-bookclub/bookclub/book/book_retired_v1'
 %%
 %% One topic per fact kind; the ids and names are in the payload, not the
-%% topic name: a consumer subscribes once and filters.
+%% topic name: a consumer subscribes once and filters. Every fact carries
+%% club_id AND club_name -- the club is a payload parameter, never a
+%% namespace, which is what lets one topic set serve a thousand clubs.
 %%
 %% The domain event stays internal; what leaves is a FACT on the mesh, and
 %% this module is the only place the two shapes meet (the emitter desks
@@ -22,9 +24,9 @@
 -define(DOMAIN, <<"bookclub">>).
 -define(VERSION, 1).
 
--define(MEMBER_FIELDS, [member_id, club_id, name, registered_at]).
--define(BOOK_FIELDS, [book_id, club_id, title, author, procured_at]).
--define(RETIRED_FIELDS, [book_id, club_id, title, author, procured_at,
+-define(MEMBER_FIELDS, [member_id, club_id, club_name, name, registered_at]).
+-define(BOOK_FIELDS, [book_id, club_id, club_name, title, author, procured_at]).
+-define(RETIRED_FIELDS, [book_id, club_id, club_name, title, author, procured_at,
                          retired_by, retired_at]).
 
 %% @doc The fact for a registered event, whose keys may be atoms or binaries
