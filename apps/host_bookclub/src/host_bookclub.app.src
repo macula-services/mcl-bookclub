@@ -1,0 +1,17 @@
+{application, host_bookclub, [
+    {description, "mcl-bookclub CMD division: commands, events, aggregates."},
+    {vsn, "0.1.0"},
+    {registered, []},
+    {mod, {host_bookclub_app, []}},
+    {applications, [
+        kernel,
+        stdlib,
+        crypto,
+        evoq,
+        reckon_gater
+    ]},
+    {env, []},
+    {modules, []},
+    {licenses, ["Apache-2.0"]},
+    {links, [{"GitHub", "https://github.com/macula-services/mcl-bookclub"}]}
+]}.

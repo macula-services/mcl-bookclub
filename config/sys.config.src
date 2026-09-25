@@ -1,0 +1,57 @@
+%% Substituted by relx at boot; every ${VAR} must resolve or the node will not
+%% start with a malformed term. That is the correct failure: a service with a
+%% half-configured realm announces itself where nobody can attribute it, which
+%% looks exactly like a healthy node.
+[
+    {mcl_om, [
+        %% Without this, mcl_om_identity:load_node_key/0 returns `undefined'
+        %% forever and identity_key/0 stays {error, no_identity_key} -- a
+        %% service that declares a handler-bearing capability() then silently
+        %% never advertises it, on every republish tick, permanently. Point it
+        %% at the mounted secrets volume.
+        {identity_key_path, "/etc/mcl/secrets/identity.key"},
+        {health_port,       ${MCL_HEALTH_PORT}},
+        {capability_topic,  <<"_mesh.cap.">>},
+        %% THE REALM IS AN APPLICATION ENV, NOT A SHELL VARIABLE, and this file
+        %% is the only place the two meet. mcl_om_identity:realm() reads
+        %% application:get_env(mcl_om, realm); exporting MCL_REALM in the
+        %% shell and expecting that to be enough has cost a sibling service an
+        %% hour, because nothing translates between the two by itself.
+        {realm,             <<"${MCL_REALM}">>},
+        %% ONE ORG PER SERVICE, NAMED AFTER THE REPOSITORY: the `Org' in every
+        %% procedure it offers (`Org/Name'), and the org the realm's grant
+        %% names. Fixed here rather than read from the environment, because it
+        %% is a property of the service, not of where it runs.
+        {org,               <<"mcl-bookclub">>},
+        %% THE TRUST ANCHOR, AND IT IS NOT OPTIONAL: the realm's public signing
+        %% key, 64-hex-per-32-bytes. MCL_REALM above is an identifier; this is
+        %% what every org-namespaced advertisement is verified against.
+        %% Public material: the half everyone verifies against, not a secret.
+        {realm_key,         <<"${MCL_REALM_KEY}">>}
+    ]},
+    %% THE PQ CRYPTO PROFILE, WITHOUT WHICH THIS NODE DOES NOT PEER.
+    %% Mandatory: without it macula 12 has no crypto profile and nothing
+    %% peers. No `puzzle_difficulty' here: macula 12 makes it one fleet
+    %% constant and refuses a per-node setting.
+    {macula, [
+        {crypto_profile, pq_hybrid}
+    ]},
+    %% EVOQ'S ADAPTER, WITHOUT WHICH THIS NODE DOES NOT BOOT.
+    %%
+    %% Mandatory because this service exports `store_id/0'. mcl_om:boot/1 then
+    %% starts the store AND a per-store evoq subscription, and that
+    %% subscription reads the global log through evoq, which crashes on
+    %% `{not_configured, event_store_adapter}' if this block is absent. evoq
+    %% starts as a release-boot application before any service's `start/2'
+    %% runs, so mcl_om cannot inject it at runtime.
+    {evoq, [
+        {event_store_adapter,    reckon_evoq_adapter},
+        {subscription_adapter,   reckon_evoq_adapter},
+        {snapshot_store_adapter, reckon_evoq_adapter},
+        %% A fallback evoq resolves before it knows whether anything dispatches
+        %% a command. It must name the SAME store as the service's store_id/0,
+        %% and a test compares the two.
+        {store_id,               mcl_bookclub_store}
+    ]},
+    {kernel, [{logger_level, info}]}
+].

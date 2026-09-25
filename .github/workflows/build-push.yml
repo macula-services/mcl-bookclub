@@ -1,0 +1,83 @@
+# Build the OCI image for mcl-bookclub and push to the registry.
+#
+# TWO CHANNELS, AND A TAG PUSH MUST NOT TOUCH THE DEPLOY ONE.
+#
+#   push to main : publishes :latest        <- the deploy channel
+#   push of v*   : publishes :<semver> ONLY <- the rollback archive
+#
+# The deployed compose tracks :latest under watchtower for zero-touch deploys,
+# and the semver tags stay published so a bad release can be pinned back to a
+# known one. A tag that also moved :latest would roll every box the moment a
+# release was cut, so cutting a release and deploying one are separate acts.
+#
+# NO PATH FILTER, ON PURPOSE. A docs-only push should not rebuild :latest and
+# restart every box, but `paths-ignore' cannot be trusted with that: on the push
+# that creates a branch GitHub evaluates the filter on the head commit alone,
+# and a first push ending in a docs commit built no image at all. The gate step
+# below diffs the pushed range itself, so an unreadable diff is a build rather
+# than a skip. If an image is ever missing anyway, run this workflow by hand.
+
+name: build-and-push
+
+on:
+  push:
+    branches: [main]
+    tags:     ['v*']
+  workflow_dispatch:
+
+# ONE IMAGE BUILD IN FLIGHT PER REF. Every push to main builds and pushes
+# :latest; without this, three quick commits run three builds that finish in
+# whatever order the runners please, and :latest ends up being whichever
+# finished LAST, not whichever was pushed last -- watchtower then rolls the
+# fleet onto an older commit and flaps.
+concurrency:
+  group: build-and-push-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      # The whole history, so the gate below can diff the pushed range.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Does this push need an image?
+        id: gate
+        run: scripts/is_image_push.sh "${{ github.event.before }}" "${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to the registry
+        if: steps.gate.outputs.build == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Emits the COMPLETE tag list, so the condition governs all of it.
+      - name: Set tags
+        if: steps.gate.outputs.build == 'true'
+        id: tag
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            echo "tags=ghcr.io/macula-services/mcl-bookclub:${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tags=ghcr.io/macula-services/mcl-bookclub:latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and push
+        if: steps.gate.outputs.build == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Containerfile
+          push: true
+          tags: ${{ steps.tag.outputs.tags }}
+          # The commit the image was built from, readable from the image itself.
+          build-args: |
+            REVISION=${{ github.sha }}
