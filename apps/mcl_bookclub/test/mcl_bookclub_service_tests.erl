@@ -166,42 +166,44 @@ the_sqlite_default_matches_between_the_facade_and_the_divisions_test() ->
        "apps/query_bookclub/src/query_bookclub_sup.erl"]).
 
 %%==============================================================================
-%% The runtime is pinned in two places, and neither is the one you are running
+%% The runtime is pinned in four places and they must agree
 %%==============================================================================
 
-%% ⚠ THIS GUARD EXISTS BECAUSE A SIBLING SERVICE DID NOT HAVE IT, AND IT COST
-%% THREE COMMITS AND AN IMAGE THAT SHIPPED ANYWAY.
-%%
-%% Its `Containerfile' said 27 while development ran on 28. So `rebar3 eunit'
-%% passing locally meant "passing on 28" and nothing more, CI failed on a crash
-%% that does not occur on 28 at all, and because the image build is a separate
-%% workflow the image went to the fleet regardless.
-%%
-%% It compares the full release: the builder's, lint's image and the release
-%% its toolchain step insists on, .tool-versions, and this VM -- and fails
-%% rather than warns when the VM differs, because developing on a release you
-%% do not ship makes a green suite mean less than it appears to.
+%% The builder image (by digest), the CI image's toolchain check, .tool-versions
+%% and the VM running this test. A floating `erlang:28' once shipped OTP 28.5 to
+%% the fleet while every check stayed green.
 the_runtime_agrees_between_the_image_the_ci_and_this_vm_test() ->
-    Image = pinned("Containerfile",
-                   "^FROM docker\\.io/(?:hexpm/)?erlang:([0-9]+\\.[0-9]+\\.[0-9]+)"
-                   "-alpine[^@\\s]*@sha256:[0-9a-f]{64} AS builder$"),
-    CiImage = pinned(".github/workflows/lint.yml",
-                     "^\\s+image: docker\\.io/(?:hexpm/)?erlang:([0-9]+\\.[0-9]+\\.[0-9]+)"
-                     "[^@\\s]*@sha256:[0-9a-f]{64}$"),
-    CiCheck = pinned(".github/workflows/lint.yml",
-                     "\\{<<\"([0-9]+\\.[0-9]+\\.[0-9]+)\">>, true\\} -> halt\\(0\\);"),
+    %% The team images' tags name a date, not a release, so the builder and
+    %% lint each assert the release in a check step; this compares those, the
+    %% .tool-versions pin and this VM, to the patch.
+    Check = "\\{<<\"([0-9]+\\.[0-9]+\\.[0-9]+)\">>, true\\} -> halt\\(0\\);",
+    Image = pinned("Containerfile", Check),
+    Ci = pinned(".github/workflows/lint.yml", Check),
     Tools = pinned(".tool-versions", "^erlang ([0-9]+\\.[0-9]+\\.[0-9]+)$"),
-    %% Sorted and deduplicated, so a failure prints every version rather than
-    %% the first pair that happened to be compared.
-    ?assertEqual([Image], lists:usort([Image, CiImage, CiCheck, Tools, running_otp()])),
-    %% What RUNS is pinned the same way: the runtime base by release and digest,
-    %% and it is the Alpine release the builder compiled the release against, so
-    %% the ERTS and NIFs shipped match the libc they run on.
-    BuilderAlpine = pinned("Containerfile",
-                           "-alpine-([0-9]+\\.[0-9]+\\.[0-9]+)@sha256:[0-9a-f]{64} AS builder$"),
-    RuntimeAlpine = pinned("Containerfile",
-                           "^FROM docker\\.io/alpine:([0-9]+\\.[0-9]+\\.[0-9]+)@sha256:[0-9a-f]{64}$"),
-    ?assertEqual(BuilderAlpine, RuntimeAlpine).
+    ?assertEqual([Image], lists:usort([Image, Ci, Tools, running_otp()])).
+
+%% Build, CI and runtime are the team pair, named by dated tag AND digest, so a
+%% re-pushed tag cannot change what builds or what runs. (The build image
+%% carries rebar3 itself; the image build no longer downloads one.)
+images_are_the_digest_pinned_team_pair_test() ->
+    Digest = ":[0-9]{8}-[0-9]{4}@sha256:[0-9a-f]{64}",
+    ?assertMatch(<<_/binary>>,
+                 pinned("Containerfile",
+                        "^FROM (ghcr\\.io/macula-io/macula-ci-otp)" ++ Digest ++ " AS builder$")),
+    ?assertMatch(<<_/binary>>,
+                 pinned("Containerfile",
+                        "^FROM (ghcr\\.io/macula-io/macula-pq-runtime)" ++ Digest ++ "$")),
+    %% The builder and lint are the same build image, digest for digest.
+    ?assertEqual(pinned("Containerfile", "^FROM (ghcr\\.io/[^ ]+) AS builder$"),
+                 pinned(".github/workflows/lint.yml", "^\\s+image: (ghcr\\.io/[^\\s]+)$")).
+
+%% The image says which commit it was built from: build-push passes the sha,
+%% the runtime stage labels the image with it.
+the_image_carries_its_revision_test() ->
+    ?assertEqual(<<"REVISION">>, pinned("Containerfile", "^ARG (REVISION)=unknown$")),
+    ?assertMatch(<<_/binary>>,
+                 pinned("Containerfile",
+                        "LABEL (org\\.opencontainers\\.image\\.revision=\"\\$\\{REVISION\\}\")")).
 
 %% The full release, 28.4.3 and not 28: `otp_release' names only the major.
 running_otp() ->
