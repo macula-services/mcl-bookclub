@@ -71,11 +71,15 @@ health_probes_the_division_stores_test() ->
         file:del_dir_r(DataDir)
     end.
 
-%% An empty list is the correct answer for a service whose capabilities do not
-%% exist yet. The assertion is here so that adding a capability breaks a test
-%% and makes someone write down what the service can now actually do.
-announces_no_capability_yet_test() ->
-    ?assertEqual([], ?SERVICE:capabilities()).
+%% The list is a promise that something answers. One procedure exists today;
+%% the assertion is here so that adding or removing a capability is a
+%% deliberate act with a name written down.
+announces_exactly_the_existing_capabilities_test() ->
+    ?assertEqual([#{name => <<"get_bookclub_by_id">>,
+                    version => 1,
+                    handler => {mcl_bookclub_get_bookclub_by_id, []},
+                    auth => open}],
+                 ?SERVICE:capabilities()).
 
 identity_spec_has_the_shape_mcl_om_expects_test() ->
     #{scope := Scope, actions := Actions,
@@ -86,13 +90,16 @@ identity_spec_has_the_shape_mcl_om_expects_test() ->
     ?assert(is_integer(Ttl) andalso Ttl > 0).
 
 %% A resource this service is not authorised for is a publish the realm would
-%% refuse once UCAN delegation lands. Asking for nothing and claiming nothing
-%% must stay in step, so the two are asserted together.
+%% refuse once UCAN delegation lands. What is announced and what authority is
+%% asked for must stay in step: one action per capability, one resource per
+%% published topic, asserted together so they cannot drift apart silently.
 authority_matches_what_is_announced_test() ->
     #{actions := Actions, resources := Resources} = ?SERVICE:identity_spec(),
-    ?assertEqual([], ?SERVICE:capabilities()),
-    ?assertEqual([], Actions),
-    ?assertEqual([], Resources).
+    ?assertEqual([<<"get_bookclub_by_id">>], Actions),
+    ?assertEqual([<<"bookclub/member/member_registered_v1">>,
+                  <<"bookclub/book/book_procured_v1">>,
+                  <<"bookclub/book/book_retired_v1">>], Resources),
+    ?assertEqual(length(Actions), length(?SERVICE:capabilities())).
 
 %% The supervisor starts and stops cleanly on its own, without mcl_om. It has
 %% no children on purpose -- every process lives in a division's tree.
@@ -102,6 +109,46 @@ supervisor_starts_and_stops_test() ->
     ?assertEqual([], supervisor:which_children(Pid)),
     unlink(Pid),
     exit(Pid, shutdown).
+
+%% The advertised capability, exercised end to end without the mesh: the
+%% handler reads the wire parameter (all three key/value shapes), the QRY
+%% desk answers from the sqlite read model, and the reply's text comes back
+%% as CBOR text. Nothing boots mcl_om.
+the_capability_answers_from_the_read_model_test() ->
+    DataDir = tmp_dir(),
+    os:putenv("MCL_DATA_DIR", DataDir),
+    try
+        {ok, Started} = application:ensure_all_started([esqlite, query_bookclub]),
+        {ok, Conn} = esqlite3:open(filename:join(DataDir, "bookclub.sqlite3")),
+        [ok = esqlite3:exec(Conn, Sql) || Sql <- bookclub_read_model_store:schema()],
+        ClubId = list_to_binary(
+                   io_lib:format("bookclub-~32.16.0b", [erlang:unique_integer([positive])])),
+        ok = seed_club(Conn, ClubId),
+        {reply, Wire, undefined} =
+            mcl_bookclub_get_bookclub_by_id:handle_request(
+              #{<<"club_id">> => {text, ClubId}}, undefined),
+        ?assertEqual({text, <<"The Crooked Shelf">>}, maps:get(name, Wire)),
+        ?assertEqual({text, <<"active">>}, maps:get(status, Wire)),
+        {error, not_found, undefined} =
+            mcl_bookclub_get_bookclub_by_id:handle_request(
+              #{club_id => <<"bookclub-", (binary:copy(<<"0">>, 32))/binary>>},
+              undefined),
+        lists:foreach(fun(A) -> application:stop(A) end, lists:reverse(Started))
+    after
+        os:unsetenv("MCL_DATA_DIR"),
+        file:del_dir_r(DataDir)
+    end.
+
+seed_club(Conn, ClubId) ->
+    {ok, Stmt} = esqlite3:prepare(
+                   Conn,
+                   "INSERT INTO clubs (club_id, name, status, initiated_by,"
+                   " initiated_at, event_id, version)"
+                   " VALUES (?, ?, 'active', ?, ?, ?, ?)"),
+    ok = esqlite3:bind(Stmt, [ClubId, <<"The Crooked Shelf">>, <<"bea">>,
+                              42, <<"evt-1">>, 0]),
+    '$done' = esqlite3:step(Stmt),
+    ok.
 
 %%==============================================================================
 %% The config the store cannot boot without

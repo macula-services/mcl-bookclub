@@ -45,21 +45,28 @@ ping(Name) ->
         exit:Reason -> {down, Reason}
     end.
 
-%% WHAT THIS SERVICE ANNOUNCES IT CAN DO. Empty on purpose: the walking
-%% skeleton's queries are not yet advertised as mesh procedures, and
-%% advertising a capability before it exists puts a lie on the mesh that
-%% another service can find and call. This list grows when the thing it names
-%% exists, and a test fails when it changes, so growing it is a deliberate act.
-capabilities() -> [].
+%% WHAT THIS SERVICE ANNOUNCES IT CAN DO. Each entry is a promise that
+%% something answers: get_bookclub_by_id is the first mesh procedure, wired
+%% to the QRY desk through mcl_bookclub_get_bookclub_by_id. Every later
+%% procedure lands here the same way, and a test fails when this list
+%% changes, so growing it is a deliberate act.
+capabilities() ->
+    [#{name => <<"get_bookclub_by_id">>,
+       version => 1,
+       handler => {mcl_bookclub_get_bookclub_by_id, []},
+       auth => open}].
 
-%% THE AUTHORITY THIS SERVICE ASKS THE REALM FOR, and deliberately nothing more.
-%% Empty until the emitters land: publishing a fact needs a topic, and asking
-%% for nothing while publishing something is the mismatch this list exists to
-%% prevent.
+%% THE AUTHORITY THIS SERVICE ASKS THE REALM FOR, and deliberately nothing
+%% more: the one procedure it serves and the three fact topics its emitters
+%% publish. Popped, an attacker gains precisely this and no more, which is
+%% the whole point of listing it. A test keeps this list and capabilities/0
+%% in step.
 identity_spec() ->
     #{scope => <<"mcl-bookclub">>,
-      actions => [],
-      resources => [],
+      actions => [<<"get_bookclub_by_id">>],
+      resources => [<<"bookclub/member/member_registered_v1">>,
+                    <<"bookclub/book/book_procured_v1">>,
+                    <<"bookclub/book/book_retired_v1">>],
       ttl_days => 30}.
 
 %% ==========================================================================

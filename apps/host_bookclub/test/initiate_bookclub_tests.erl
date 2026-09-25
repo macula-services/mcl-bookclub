@@ -22,7 +22,7 @@ pure_test_() ->
      fun a_minted_club_id_satisfies_the_stream_contract/0,
      fun the_state_folds_both_event_shapes/0,
      fun the_state_round_trips_through_a_map/0,
-     fun the_cmd_division_imports_no_mesh_or_sqlite_module/0].
+     fun the_cmd_division_imports_no_mesh_module_outside_the_emitters_test/0].
 
 a_club_is_initiated_on_its_own_stream() ->
     {ok, Cmd} = club(),
@@ -104,19 +104,35 @@ the_state_round_trips_through_a_map() ->
     ?assertEqual(7, bookclub_state:initiated_at(S2)).
 
 %% The division boundary, as a mechanism rather than a convention: the CMD
-%% sources must not name a mesh or read-model module. Comments count --
-%% naming the thing in prose is how the drift starts.
-the_cmd_division_imports_no_mesh_or_sqlite_module() ->
+%% sources must not name the read-model store, and the mesh SDK may appear
+%% ONLY in the emitter desks and the facts module -- the named places where
+%% the domain meets the mesh. Comments count: naming the thing in prose is
+%% how the drift starts.
+the_cmd_division_imports_no_mesh_module_outside_the_emitters_test() ->
     lists:foreach(
-      fun(Forbidden) ->
+      fun(Src) ->
+              {ok, Text} = file:read_file(Src),
+              ?assertEqual(nomatch, binary:match(Text, <<"esqlite">>),
+                           {forbidden_reference, <<"esqlite">>, Src}),
               lists:foreach(
-                fun(Src) ->
-                        {ok, Text} = file:read_file(Src),
-                        ?assertEqual(nomatch, binary:match(Text, Forbidden),
-                                     {forbidden_reference, Forbidden, Src})
-                end, erl_sources(repo_file("apps/host_bookclub/src")))
-      end,
-      [<<"macula">>, <<"mcl_om">>, <<"esqlite">>]).
+                fun(Forbidden) -> check_mesh_reference(Forbidden, Src, Text) end,
+                [<<"macula">>, <<"mcl_om">>])
+      end, erl_sources(repo_file("apps/host_bookclub/src"))).
+
+check_mesh_reference(Forbidden, Src, Text) ->
+    IsMeshBoundary = mesh_boundary(Src),
+    case {IsMeshBoundary, binary:match(Text, Forbidden)} of
+        {true, _} -> ok;
+        {false, nomatch} -> ok;
+        {false, _} -> ?assert(false, {forbidden_reference, Forbidden, Src})
+    end.
+
+mesh_boundary(Src) ->
+    Base = filename:basename(Src),
+    case re:run(Base, "^emit_.*_to_mesh\\.erl$") of
+        {match, _} -> true;
+        nomatch -> Base =:= "mcl_bookclub_facts.erl"
+    end.
 
 %%============================================================================
 %% Helpers

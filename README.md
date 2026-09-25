@@ -25,19 +25,28 @@ subscription delivers it to the PRJ projections, which write the sqlite read
 model; QRY answers questions from it. The facade advertises QRY's answers as
 mesh capabilities — that wiring is the only place the mesh meets the domain.
 
-## Status: walking skeleton
+## Status: the full domain, end to end
 
-The first vertical slice is complete end to end:
+Every desk of the bookclub is in place and exercised against a real
+reckon-db store:
 
-    initiate_bookclub_v1 ──▶ bookclub_aggregate ──▶ bookclub_initiated_v1
-        (CMD dispatch)                               ──▶ bookclub_initiated_v1_to_sqlite_clubs
-                                                          ──▶ get_bookclub_by_id (QRY)
+- **CMD** (`host_bookclub`): `initiate_bookclub`, `archive_bookclub`,
+  `register_member`, `unregister_member`, `procure_book`, `retire_book`,
+  `start_reading`, `finish_reading`, `plan_party`, the
+  `on_member_registered_v1_maybe_plan_party` policy, and the three mesh
+  emitters.
+- **PRJ** (`project_bookclub`): the clubs, members, books and readings
+  tables, one idempotent projection per event, each row carrying the
+  applied position (`event_id`, `version`).
+- **QRY** (`query_bookclub`): `get_*_by_id` for every aggregate and
+  `get_readings_by_member`.
+- **The facade** (`mcl_bookclub`): the mcl_om contract, `/health` probing the
+  read path, the store wiring, and the first mesh capability,
+  `mcl-bookclub/get_bookclub_by_id`.
 
-Everything a new slice adds — `archive_bookclub`, `register_member`,
-`procure_book`, `retire_book`, `start_reading`, `finish_reading`, the
-`plan_party` policy, and the mesh emitters — follows the shape this slice
-established. The service announces no capability yet, deliberately: a
-capability is advertised only when the thing it names exists and answers.
+Each division's boundary is a test, not a convention: CMD may name the mesh
+SDK only in the emitter desks and the facts module, PRJ and QRY name it
+nowhere, and the schema-contract test pins every QRY column to the PRJ DDL.
 
 ## Reading order
 
