@@ -53,5 +53,12 @@
         %% and a test compares the two.
         {store_id,               mcl_bookclub_store}
     ]},
+    %% THE LAN ADMIN UI, on its own port, NOT a health port. The listener
+    %% binds all interfaces (the box's LAN): the UI is the operator's
+    %% LAN-facing tool, and the image EXPOSEs this port beside the health
+    %% one. See PORTS.md for the assignment.
+    {mcl_bookclub, [
+        {admin_port, ${MCL_ADMIN_PORT}}
+    ]},
     {kernel, [{logger_level, info}]}
 ].

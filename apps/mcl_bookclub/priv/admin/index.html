@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mcl-bookclub — Admin</title>
+<style>
+  :root {
+    --ink: #1a1d21; --muted: #6b7280; --paper: #faf9f7; --card: #ffffff;
+    --line: #e5e3df; --accent: #b45309; --ok: #15803d; --err: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font: 15px/1.55 system-ui, sans-serif; color: var(--ink);
+    background: var(--paper);
+  }
+  header { padding: 1.5rem 2rem 1rem; border-bottom: 1px solid var(--line); }
+  header h1 { margin: 0; font-size: 1.4rem; }
+  header p { margin: .25rem 0 0; color: var(--muted); font-size: .85rem; }
+  main { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+         gap: 1rem; padding: 1.5rem 2rem 3rem; max-width: 1400px; }
+  section.task {
+    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+    padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: .6rem;
+  }
+  section.task h2 { margin: 0; font-size: 1rem; border-bottom: 1px solid var(--line);
+                     padding-bottom: .5rem; }
+  section.task p { margin: 0; color: var(--muted); font-size: .8rem; }
+  label { display: flex; flex-direction: column; gap: .2rem; font-size: .8rem;
+          color: var(--muted); }
+  input { font: inherit; padding: .35rem .5rem; border: 1px solid var(--line);
+          border-radius: 6px; background: #fff; }
+  button {
+    font: inherit; font-weight: 600; padding: .45rem .8rem; border: 0;
+    border-radius: 6px; background: var(--accent); color: #fff; cursor: pointer;
+  }
+  button:hover { filter: brightness(1.1); }
+  section.lookup { grid-column: 1 / -1; }
+  .lookup-row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: end; }
+  pre {
+    grid-column: 1 / -1; background: #fff; border: 1px solid var(--line);
+    border-radius: 8px; padding: 1rem; overflow-x: auto; font: 12px/1.5 ui-monospace, monospace;
+    max-height: 380px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;
+  }
+  .ok { color: var(--ok); } .err { color: var(--err); }
+  .hint { color: var(--muted); font-size: .78rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>mcl-bookclub — Admin</h1>
+  <p>LAN-facing operator UI. Every task dispatches the same command the
+     domain allows; nothing here can do what the aggregate refuses.</p>
+</header>
+<main id="tasks"></main>
+<pre id="log">—</pre>
+<script src="/app.js"></script>
+</body>
+</html>

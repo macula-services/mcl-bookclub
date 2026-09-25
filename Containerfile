@@ -62,13 +62,16 @@ ENV MCL_NODE_NAME=mcl_bookclub
 ENV MCL_NODE_HOST=127.0.0.1
 ENV MCL_COOKIE=mcl_bookclub
 ENV MCL_HEALTH_PORT=8452
+# The LAN admin UI, on its own port -- NOT a health port (PORTS.md). The
+# listener binds all interfaces: the UI is the operator's LAN-facing tool.
+ENV MCL_ADMIN_PORT=8488
 # The reckon-db store and the sqlite read model. A bind mount on a bulk drive;
 # without one every recreate forgets the club's record.
 ENV MCL_DATA_DIR=/data
 
 VOLUME ["/etc/mcl/secrets", "/data"]
 
-EXPOSE 8452
+EXPOSE 8452 8488
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD curl -fsS "http://127.0.0.1:${MCL_HEALTH_PORT}/health" || exit 1
 

@@ -9,6 +9,12 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Added
 
+- The LAN admin UI: a task-based operator console (static page + JSON API)
+  on `MCL_ADMIN_PORT` (8488), served by the facade through cowboy. Every
+  task is one POST to the desk's own `{command}_api` entry point -- the
+  corpus's HOPE-side command entry point, pure and mesh-free -- and every
+  lookup is a GET against the QRY division. The aggregate's guards are the
+  last word whatever the UI sends.
 - The mesh face: three emitters (`emit_member_registered_v1_to_mesh`,
   `emit_book_procured_v1_to_mesh`, `emit_book_retired_v1_to_mesh`) translate
   domain events into facts on `<realm>/mcl-bookclub/bookclub/...` through

@@ -101,14 +101,20 @@ authority_matches_what_is_announced_test() ->
                   <<"bookclub/book/book_retired_v1">>], Resources),
     ?assertEqual(length(Actions), length(?SERVICE:capabilities())).
 
-%% The supervisor starts and stops cleanly on its own, without mcl_om. It has
-%% no children on purpose -- every process lives in a division's tree.
+%% The supervisor starts and stops cleanly on its own, without mcl_om. Its
+%% one child is the LAN admin listener, on an ephemeral port so the test
+%% never collides with a box's real UI.
 supervisor_starts_and_stops_test() ->
+    load_app(mcl_bookclub),
+    ok = application:set_env(mcl_bookclub, admin_port, 0),
+    {ok, Started} = application:ensure_all_started([cowboy]),
     {ok, Pid} = mcl_bookclub_sup:start_link(),
     ?assert(is_process_alive(Pid)),
-    ?assertEqual([], supervisor:which_children(Pid)),
+    ?assertMatch([{mcl_bookclub_admin_http, _, _, _}],
+                 supervisor:which_children(Pid)),
     unlink(Pid),
-    exit(Pid, shutdown).
+    exit(Pid, shutdown),
+    [application:stop(App) || App <- lists:reverse(Started)].
 
 %% The advertised capability, exercised end to end without the mesh: the
 %% handler reads the wire parameter (all three key/value shapes), the QRY
@@ -283,3 +289,9 @@ tmp_dir() ->
                          integer_to_list(erlang:unique_integer([positive]))]),
     ok = filelib:ensure_dir(filename:join(Dir, "x")),
     Dir.
+
+load_app(App) ->
+    case application:load(App) of
+        ok -> ok;
+        {error, {already_loaded, App}} -> ok
+    end.

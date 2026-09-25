@@ -9,6 +9,9 @@
         crypto,
         %% Mesh SDK, realm identity, capabilities, health.
         mcl_om,
+        %% The LAN admin UI's listener and codec.
+        cowboy,
+        jsx,
         %% The three divisions, in boot order: their projections and stores
         %% register before mcl_om:boot/1 starts the store subscription, so a
         %% restart's catch-up replay finds every consumer already listening.
