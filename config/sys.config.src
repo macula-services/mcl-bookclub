@@ -38,18 +38,18 @@
     ]},
     %% EVOQ'S ADAPTER, WITHOUT WHICH THIS NODE DOES NOT BOOT.
     %%
-    %% Mandatory because this service exports `store_id/0'. mcl_om:boot/1 then
-    %% starts the store AND a per-store evoq subscription, and that
-    %% subscription reads the global log through evoq, which crashes on
+    %% Mandatory because this service owns a store. mcl_bookclub_store starts it
+    %% AND a per-store evoq subscription, and that subscription reads the
+    %% global log through evoq, which crashes on
     %% `{not_configured, event_store_adapter}' if this block is absent. evoq
     %% starts as a release-boot application before any service's `start/2'
-    %% runs, so mcl_om cannot inject it at runtime.
+    %% runs, so nothing can inject it at runtime.
     {evoq, [
         {event_store_adapter,    reckon_evoq_adapter},
         {subscription_adapter,   reckon_evoq_adapter},
         {snapshot_store_adapter, reckon_evoq_adapter},
         %% A fallback evoq resolves before it knows whether anything dispatches
-        %% a command. It must name the SAME store as the service's store_id/0,
+        %% a command. It must name the SAME store as event_store/0's id,
         %% and a test compares the two.
         {store_id,               mcl_bookclub_store}
     ]},

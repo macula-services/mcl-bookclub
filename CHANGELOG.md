@@ -9,6 +9,14 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
+- **The store is this service's own** (mcl-om#10). From mcl_om 0.35 on, mcl_om opens no store and
+  brings no reckon-db or evoq application, so mcl-bookclub declares `reckon_db`, `evoq` and
+  `reckon_evoq` itself (reckon_db was declared nowhere; the floors mcl_om carried come with them)
+  and `mcl_bookclub_app` opens the store with its own copy of the wiring (`mcl_bookclub_store`)
+  before `mcl_om:boot/1`, after the three divisions have started, as before. The service describes
+  the store as one `event_store/0` map instead of `store_id/0` and `data_dir/0`, which mcl_om 0.35
+  would warn about. mcl_om is bounded `>= 0.34.0 and < 0.36.0`.
+
 - The readable status strings now live with their flags: each aggregate's
   `{aggregate}_status` module owns a flag map and `to_string/1` (rendered
   through `evoq_bit_flags:to_string/2`), and the projections take each

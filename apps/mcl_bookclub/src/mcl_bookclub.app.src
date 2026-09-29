@@ -9,11 +9,15 @@
         crypto,
         %% Mesh SDK, realm identity, capabilities, health.
         mcl_om,
+        %% This service's own event store (mcl_bookclub_store opens it).
+        reckon_db,
+        evoq,
+        reckon_evoq,
         %% The LAN admin UI's listener and codec.
         cowboy,
         jsx,
         %% The three divisions, in boot order: their projections and stores
-        %% register before mcl_om:boot/1 starts the store subscription, so a
+        %% register before mcl_bookclub_app starts the store subscription, so a
         %% restart's catch-up replay finds every consumer already listening.
         host_bookclub,
         project_bookclub,

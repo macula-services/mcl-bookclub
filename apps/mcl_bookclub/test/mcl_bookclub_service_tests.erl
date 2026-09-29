@@ -163,8 +163,8 @@ seed_club(Conn, ClubId) ->
 %% ⚠ A SIBLING SERVICE'S FLEET CRASH-LOOPED ON TWO OF THREE NODES FOR WANT OF THE
 %% `evoq' BLOCK.
 %%
-%% Exporting `store_id/0' makes `mcl_om:boot/1' start the store AND a per-store
-%% evoq subscription. That subscription reads through evoq, which raises
+%% mcl_bookclub_app opens the store AND a per-store evoq subscription before
+%% `mcl_om:boot/1'. That subscription reads through evoq, which raises
 %% `{not_configured, event_store_adapter}' unless sys.config names the adapter,
 %% and evoq starts as a release-boot application before any service's `start/2'
 %% runs, so nothing can inject it later.
@@ -174,7 +174,7 @@ seed_club(Conn, ClubId) ->
 %% there.
 the_evoq_adapter_is_configured_wherever_a_store_is_opened_test() ->
     {ok, Text} = file:read_file(alongside("config/sys.config.src")),
-    ?assert(erlang:function_exported(?SERVICE, store_id, 0)),
+    ?assert(erlang:function_exported(?SERVICE, event_store, 0)),
     lists:foreach(
       fun(Needed) ->
               ?assertNotEqual(nomatch, binary:match(Text, Needed),
@@ -184,13 +184,13 @@ the_evoq_adapter_is_configured_wherever_a_store_is_opened_test() ->
        <<"reckon_evoq_adapter">>]).
 
 %% ⚠ AND THE STORE ID IS IN TWO PLACES, WHICH IS ONE MORE THAN IT SHOULD BE.
-%% `store_id/0' is what mcl_om opens; the `{store_id, ...}' in the evoq block
+%% event_store/0's id is what mcl_bookclub_app opens; the `{store_id, ...}' in the evoq block
 %% is what evoq falls back to when it resolves a dispatch before knowing there
 %% is none. Nothing makes them agree, and disagreeing opens one store and
 %% addresses another. Same boundary guard, other side.
 the_store_id_agrees_between_erlang_and_config_test() ->
     {ok, Text} = file:read_file(alongside("config/sys.config.src")),
-    Declared = atom_to_binary(?SERVICE:store_id(), utf8),
+    Declared = atom_to_binary(store_id(), utf8),
     ?assertNotEqual(nomatch, binary:match(Text, Declared),
                     {store_id_not_in_sys_config, Declared}).
 
@@ -198,9 +198,34 @@ the_store_id_agrees_between_erlang_and_config_test() ->
 %% not fine is shipping that default to a node, which is why the generated
 %% compose file mounts a volume and sets the variable this reads.
 the_data_directory_is_answerable_test() ->
-    ?assert(erlang:function_exported(?SERVICE, data_dir, 0)),
-    ?assert(is_list(?SERVICE:data_dir())),
-    ?assertNotEqual("", ?SERVICE:data_dir()).
+    Dir = data_dir(),
+    ?assert(is_list(Dir)),
+    ?assertNotEqual("", Dir).
+
+%% THE STORE IS THIS SERVICE'S OWN (mcl_om opens none from 0.35): mcl_bookclub_app
+%% opens it before mcl_om:boot/1, and the divisions, which start first, are
+%% already listening when its subscription replays.
+the_store_is_opened_before_the_service_boots_test() ->
+    {ok, App} = file:read_file(alongside("apps/mcl_bookclub/src/mcl_bookclub_app.erl")),
+    {Open, _} = binary:match(App, <<"mcl_bookclub_store:open(">>),
+    {Boot, _} = binary:match(App, <<"mcl_om:boot(">>),
+    ?assert(Open < Boot).
+
+%% ⚠ NOT THE OLD CONTRACT'S NAMES: mcl_om 0.35 warns at every boot about a service
+%% module exporting store_id/0 and data_dir/0 together.
+exports_none_of_the_old_store_callbacks_test() ->
+    _ = code:ensure_loaded(?SERVICE),
+    ?assertEqual([], [F || F <- [store_id, data_dir, store_indexes, store_mode, store_integrity],
+                           erlang:function_exported(?SERVICE, F, 0)]).
+
+%% The applications the store needs are this service's to declare.
+declares_the_store_applications_test() ->
+    _ = application:load(mcl_bookclub),
+    {ok, Apps} = application:get_key(mcl_bookclub, applications),
+    ?assertEqual([], [A || A <- [reckon_db, evoq, reckon_evoq], not lists:member(A, Apps)]).
+
+store_id() -> maps:get(id, ?SERVICE:event_store()).
+data_dir() -> maps:get(dir, ?SERVICE:event_store()).
 
 %% THE SQLITE PATH IS A THIRD PLACE, shared by three modules: the facade's
 %% data_dir/0 default and the two division supervisors that derive the sqlite
@@ -208,7 +233,7 @@ the_data_directory_is_answerable_test() ->
 %% this pins the default string into all three.
 the_sqlite_default_matches_between_the_facade_and_the_divisions_test() ->
     os:unsetenv("MCL_DATA_DIR"),
-    ?assertEqual("/tmp/mcl_bookclub", ?SERVICE:data_dir()),
+    ?assertEqual("/tmp/mcl_bookclub", data_dir()),
     lists:foreach(
       fun(Rel) ->
               {ok, Text} = file:read_file(alongside(Rel)),

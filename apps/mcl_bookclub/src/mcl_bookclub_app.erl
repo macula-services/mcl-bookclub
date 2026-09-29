@@ -1,10 +1,9 @@
 %% @doc OTP application entry for the facade.
 %%
-%% mcl_om:boot/1 wires the mesh, the realm identity, capabilities and health,
-%% then starts this service. Because the service exports store_id/0 and
-%% data_dir/0, boot/1 also opens the reckon-db store AND its evoq subscription
-%% BEFORE start/1 fires -- so this code never calls reckon_db_sup:start_store/1
-%% itself.
+%% Opens this service's own reckon-db store and its evoq subscription
+%% (mcl_bookclub_store, from mcl_bookclub_service:event_store/0), THEN lets
+%% mcl_om:boot/1 wire the mesh, the realm identity, capabilities and health and
+%% start the service. mcl_om opens no store (0.35, mcl-om#10).
 %%
 %% The three divisions start before this app does (they are listed in the
 %% .app.src applications tuple), so by the time the store subscription starts
@@ -16,6 +15,8 @@
 
 -export([start/2, stop/1]).
 
-start(_Type, _Args) -> mcl_om:boot(mcl_bookclub_service).
+start(_Type, _Args) ->
+    ok = mcl_bookclub_store:open(mcl_bookclub_service:event_store()),
+    mcl_om:boot(mcl_bookclub_service).
 
 stop(_State) -> ok.
