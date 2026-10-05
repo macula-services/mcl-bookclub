@@ -7,6 +7,11 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-05
+
+- **On mcl_om 0.37.6 and macula 13.5.0** (`mcl_om ~> 0.37`, released versions only). mcl_om 0.37 brings
+  the inbound guard pipeline (mcl-om#14); macula 13.5 adds `macula_record:decode_payload/1`, no wire
+  change. This release is what the dev fleet's `:latest` follows: CI signs it, then moves `:latest`.
 ### Changed
 
 - **The store is this service's own** (mcl-om#10). From mcl_om 0.35 on, mcl_om opens no store and
