@@ -50,8 +50,6 @@ services:
       - MCL_NODE_NAME=mcl_bookclub
       - MCL_NODE_HOST=127.0.0.1
       - MCL_COOKIE=mcl_bookclub
-      # Host networking means a port already bound on this host fails SILENTLY.
-      - MCL_HEALTH_PORT=8452
       # The LAN admin UI: the operator's task-based console, on the box's LAN
       # (all interfaces), NOT a health port.
       - MCL_ADMIN_PORT=8488
