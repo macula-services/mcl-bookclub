@@ -20,7 +20,7 @@
 
 info() ->
     #{name => <<"mcl-bookclub">>,
-      version => <<"0.1.0">>,
+      version => <<"0.2.0">>,
       description => <<"A book club kept as a reckon-db event store, with projections into sqlite.">>}.
 
 start(_Opts) -> mcl_bookclub_sup:start_link().

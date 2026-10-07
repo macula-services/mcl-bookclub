@@ -7,6 +7,11 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-07
+
+- **On mcl_om 0.38 and macula 14.2** (`mcl_om ~> 0.38`, released versions only), the SDK base every
+  deployed service runs on. No behaviour change. (#2)
+
 ### Changed
 
 - **Nothing moves `:latest` any more** (macula-fleet#15). The `promote-latest` job is gone: macula-fleet

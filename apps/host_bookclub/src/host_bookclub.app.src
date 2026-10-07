@@ -1,6 +1,6 @@
 {application, host_bookclub, [
     {description, "mcl-bookclub CMD division: commands, events, aggregates."},
-    {vsn, "0.1.0"},
+    {vsn, "0.2.0"},
     {registered, []},
     {mod, {host_bookclub_app, []}},
     {applications, [
