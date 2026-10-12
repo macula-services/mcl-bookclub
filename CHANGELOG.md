@@ -7,7 +7,18 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
-- **Rebuilt on macula 14.8.2** (refused dials back off further each time, macula#95).
+## [0.2.3] - 2026-10-13
+
+### Changed
+
+- **Rebuilt on macula 14.8.2 or newer** (refused dials back off further each
+  time, macula#95). This is what the v0.2.2 tag carried; that tag sits off
+  main, so 0.2.3 is the release on main (macula-fleet#21).
+
+### Fixed
+
+- **Every version spot reports the release:** all four app.src files, the relx
+  release version (still 0.1.0 until now) and `info/0` say 0.2.3.
 
 ## [0.2.1] - 2026-10-10
 
