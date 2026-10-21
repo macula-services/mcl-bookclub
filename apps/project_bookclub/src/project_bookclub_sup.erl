@@ -14,72 +14,35 @@ start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
     SqlitePath = filename:join(data_dir(), "bookclub.sqlite3"),
-    {ok, {#{strategy => one_for_one, intensity => 5, period => 10}, [
-        %% The store FIRST: a projection child crashing is restarted against
-        %% a store that exists.
-        #{id => bookclub_read_model_store,
-          start => {bookclub_read_model_store, start_link, [SqlitePath]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [bookclub_read_model_store]},
-        #{id => bookclub_initiated_v1_to_sqlite_clubs,
-          start => {evoq_event_handler, start_link,
-                    [bookclub_initiated_v1_to_sqlite_clubs, #{}]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [evoq_event_handler]},
-        #{id => bookclub_archived_v1_to_sqlite_clubs,
-          start => {evoq_event_handler, start_link,
-                    [bookclub_archived_v1_to_sqlite_clubs, #{}]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [evoq_event_handler]},
-        #{id => member_registered_v1_to_sqlite_members,
-          start => {evoq_event_handler, start_link,
-                    [member_registered_v1_to_sqlite_members, #{}]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [evoq_event_handler]},
-        #{id => member_unregistered_v1_to_sqlite_members,
-          start => {evoq_event_handler, start_link,
-                    [member_unregistered_v1_to_sqlite_members, #{}]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [evoq_event_handler]},
-        #{id => book_procured_v1_to_sqlite_books,
-          start => {evoq_event_handler, start_link,
-                    [book_procured_v1_to_sqlite_books, #{}]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [evoq_event_handler]},
-        #{id => book_retired_v1_to_sqlite_books,
-          start => {evoq_event_handler, start_link,
-                    [book_retired_v1_to_sqlite_books, #{}]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [evoq_event_handler]},
-        #{id => reading_started_v1_to_sqlite_readings,
-          start => {evoq_event_handler, start_link,
-                    [reading_started_v1_to_sqlite_readings, #{}]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [evoq_event_handler]},
-        #{id => reading_finished_v1_to_sqlite_readings,
-          start => {evoq_event_handler, start_link,
-                    [reading_finished_v1_to_sqlite_readings, #{}]},
-          restart => permanent,
-          shutdown => 5000,
-          type => worker,
-          modules => [evoq_event_handler]}
-    ]}}.
+    %% The store FIRST: a projection child crashing is restarted against
+    %% a store that exists.
+    Store = #{id => bookclub_read_model_store,
+              start => {bookclub_read_model_store, start_link, [SqlitePath]},
+              restart => permanent,
+              shutdown => 5000,
+              type => worker,
+              modules => [bookclub_read_model_store]},
+    {ok, {#{strategy => one_for_one, intensity => 5, period => 10},
+          [Store | [projection_child(P) || P <- projections()]]}}.
+
+projections() ->
+    [bookclub_initiated_v1_to_sqlite_clubs,
+     bookclub_archived_v1_to_sqlite_clubs,
+     member_registered_v1_to_sqlite_members,
+     member_unregistered_v1_to_sqlite_members,
+     book_procured_v1_to_sqlite_books,
+     book_retired_v1_to_sqlite_books,
+     reading_started_v1_to_sqlite_readings,
+     reading_finished_v1_to_sqlite_readings].
+
+%% One evoq_event_handler per projection desk, its id the projection module.
+projection_child(Projection) ->
+    #{id => Projection,
+      start => {evoq_event_handler, start_link, [Projection, #{}]},
+      restart => permanent,
+      shutdown => 5000,
+      type => worker,
+      modules => [evoq_event_handler]}.
 
 %% The same variable the facade's data_dir/0 reads, with the same default;
 %% a test in the facade pins the three together so they cannot drift.
