@@ -52,7 +52,7 @@ a_rejected_stream_id_never_touches_the_store() ->
                   #{club_id => <<"the-crooked-shelf">>,
                     name => <<"N">>, initiated_by => <<"bea">>}),
     ?assertMatch({error, _}, maybe_initiate_bookclub:dispatch(Cmd)),
-    ?assertError({invalid_stream_id, _},
+    ?assertError({error, {invalid_stream_id, _, _}},
                  host_bookclub_test_store:stream(<<"the-crooked-shelf">>)).
 
 a_command_needs_every_field() ->

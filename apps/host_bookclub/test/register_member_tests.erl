@@ -74,7 +74,7 @@ a_rejected_stream_id_never_touches_the_store() ->
                     club_id => initiate_bookclub_v1:mint_club_id(),
                     name => <<"Bea">>}),
     ?assertMatch({error, _}, maybe_register_member:dispatch(Cmd)),
-    ?assertError({invalid_stream_id, _},
+    ?assertError({error, {invalid_stream_id, _, _}},
                  host_bookclub_test_store:stream(<<"bea-the-member">>)).
 
 a_command_needs_every_field() ->
