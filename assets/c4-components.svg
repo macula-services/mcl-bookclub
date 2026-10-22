@@ -14,6 +14,7 @@
 .b-sys { fill: #F5E9CC; stroke: #A56F0A; stroke-width: 2; }
 .b-per { fill: #E3EBF2; stroke: #3B5B7A; stroke-width: 1.25; }
 .b-mac { fill: #E6E4EE; stroke: #5E5A78; stroke-width: 1.25; }
+.b-lib { fill: #E7F0E8; stroke: #4A7A55; stroke-width: 1.25; }
 .b-ext { fill: #ECEFED; stroke: #8A9791; stroke-width: 1.25; }
 .b-cmp { fill: #FFFFFF; stroke: #8A9791; stroke-width: 1.25; }
 .b-later { fill: none; stroke: #8A9791; stroke-width: 1.25; stroke-dasharray: 5 4; }
@@ -30,6 +31,7 @@
 .b-sys { fill: #3A2E13; stroke: #E3AA3C; }
 .b-per { fill: #1D2A36; stroke: #8EB4D8; }
 .b-mac { fill: #26243A; stroke: #A9A4C8; }
+.b-lib { fill: #1A241C; stroke: #8FBE9B; }
 .b-ext { fill: #1C2421; stroke: #7D8B85; }
 .b-cmp { fill: #171F1C; stroke: #7D8B85; }
 .b-later { stroke: #7D8B85; }
@@ -111,31 +113,31 @@
 <text class="t-desc" x="968" y="602">policy and three emit_*_v1_to_mesh</text>
 <text class="t-desc" x="968" y="618">handlers</text>
 <text class="t-desc" x="32" y="706">The libraries every app links:</text>
-<rect class="b-mac" x="32" y="720" width="240" height="136" rx="10"/>
+<rect class="b-lib" x="32" y="720" width="240" height="136" rx="10"/>
 <text class="t-code" x="48" y="748">mcl_om</text>
 <text class="t-type" x="48" y="766">[library, ~&gt; 1.4]</text>
 <text class="t-desc" x="48" y="790">boot/1: node key, realm join,</text>
 <text class="t-desc" x="48" y="806">QUIC pool, capability</text>
 <text class="t-desc" x="48" y="822">registration, /health</text>
-<rect class="b-mac" x="287" y="720" width="240" height="136" rx="10"/>
+<rect class="b-lib" x="287" y="720" width="240" height="136" rx="10"/>
 <text class="t-code" x="303" y="748">macula</text>
 <text class="t-type" x="303" y="766">[library, ~&gt; 16.0]</text>
 <text class="t-desc" x="303" y="790">QUIC transport, RPC by</text>
 <text class="t-desc" x="303" y="806">name, publish on a topic,</text>
 <text class="t-desc" x="303" y="822">signed DHT records</text>
-<rect class="b-mac" x="542" y="720" width="240" height="136" rx="10"/>
+<rect class="b-lib" x="542" y="720" width="240" height="136" rx="10"/>
 <text class="t-code" x="558" y="748">evoq</text>
 <text class="t-type" x="558" y="766">[&gt;= 1.26.1, &lt; 2.0.0]</text>
 <text class="t-desc" x="558" y="790">dispatch, aggregates, the</text>
 <text class="t-desc" x="558" y="806">event-type registry, the</text>
 <text class="t-desc" x="558" y="822">$all subscription</text>
-<rect class="b-mac" x="797" y="720" width="240" height="136" rx="10"/>
+<rect class="b-lib" x="797" y="720" width="240" height="136" rx="10"/>
 <text class="t-code" x="813" y="748">reckon_db + reckon_evoq</text>
 <text class="t-type" x="813" y="766">[~&gt; 5.4, &gt;= 2.7.2]</text>
 <text class="t-desc" x="813" y="790">the event log on disk and</text>
 <text class="t-desc" x="813" y="806">the adapter evoq reads it</text>
 <text class="t-desc" x="813" y="822">through</text>
-<rect class="b-mac" x="1052" y="720" width="240" height="136" rx="10"/>
+<rect class="b-lib" x="1052" y="720" width="240" height="136" rx="10"/>
 <text class="t-code" x="1068" y="748">esqlite</text>
 <text class="t-type" x="1068" y="766">[library, ~&gt; 0.9]</text>
 <text class="t-desc" x="1068" y="790">one sqlite file per store;</text>
@@ -179,10 +181,12 @@
 <text class="t-leg" x="140.8" y="1280">Person</text>
 <rect class="b-mac" x="184.39999999999998" y="1268" width="22" height="14" rx="3"/>
 <text class="t-leg" x="214.39999999999998" y="1280">Macula infrastructure</text>
-<rect class="b-ext" x="357.0" y="1268" width="22" height="14" rx="3"/>
-<text class="t-leg" x="387.0" y="1280">External system</text>
-<rect class="b-cmp" x="490.0" y="1268" width="22" height="14" rx="3"/>
-<text class="t-leg" x="520.0" y="1280">Container or component</text>
-<rect class="bound" x="669.2" y="1268" width="22" height="14" rx="3"/>
-<text class="t-leg" x="699.2" y="1280">Boundary</text>
+<rect class="b-lib" x="357.0" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="387.0" y="1280">Library</text>
+<rect class="b-ext" x="437.2" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="467.2" y="1280">External system</text>
+<rect class="b-cmp" x="570.2" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="600.2" y="1280">Container or component</text>
+<rect class="bound" x="749.4000000000001" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="779.4000000000001" y="1280">Boundary</text>
 </svg>

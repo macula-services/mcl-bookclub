@@ -31,6 +31,7 @@ KINDS = {
     "b-sys": ("#F5E9CC", "#A56F0A", "#3A2E13", "#E3AA3C"),   # in scope
     "b-per": ("#E3EBF2", "#3B5B7A", "#1D2A36", "#8EB4D8"),   # person
     "b-mac": ("#E6E4EE", "#5E5A78", "#26243A", "#A9A4C8"),   # Macula infrastructure
+    "b-lib": ("#E7F0E8", "#4A7A55", "#1A241C", "#8FBE9B"),   # library
     "b-ext": ("#ECEFED", "#8A9791", "#1C2421", "#7D8B85"),   # external system
     "b-cmp": ("#FFFFFF", "#8A9791", "#171F1C", "#7D8B85"),   # component or container
 }
@@ -75,7 +76,7 @@ DEFS = ('<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth=
         'orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>')
 
 LEGEND = [("b-sys", "In scope"), ("b-per", "Person"), ("b-mac", "Macula infrastructure"),
-          ("b-ext", "External system"), ("b-cmp", "Container or component")]
+          ("b-lib", "Library"), ("b-ext", "External system"), ("b-cmp", "Container or component")]
 BOUNDARY = ("bound", "Boundary")
 
 
@@ -218,23 +219,23 @@ def components():
            "handlers"], code=True)
     # The libraries the release links.
     d.text("t-desc", 32, 706, "The libraries every app links:")
-    d.box("b-mac", 32, 720, 240, 136, "mcl_om", "[library, ~> 1.4]",
+    d.box("b-lib", 32, 720, 240, 136, "mcl_om", "[library, ~> 1.4]",
           ["boot/1: node key, realm join,",
            "QUIC pool, capability",
            "registration, /health"], code=True)
-    d.box("b-mac", 287, 720, 240, 136, "macula", "[library, ~> 16.0]",
+    d.box("b-lib", 287, 720, 240, 136, "macula", "[library, ~> 16.0]",
           ["QUIC transport, RPC by",
            "name, publish on a topic,",
            "signed DHT records"], code=True)
-    d.box("b-mac", 542, 720, 240, 136, "evoq", "[>= 1.26.1, < 2.0.0]",
+    d.box("b-lib", 542, 720, 240, 136, "evoq", "[>= 1.26.1, < 2.0.0]",
           ["dispatch, aggregates, the",
            "event-type registry, the",
            "$all subscription"], code=True)
-    d.box("b-mac", 797, 720, 240, 136, "reckon_db + reckon_evoq", "[~> 5.4, >= 2.7.2]",
+    d.box("b-lib", 797, 720, 240, 136, "reckon_db + reckon_evoq", "[~> 5.4, >= 2.7.2]",
           ["the event log on disk and",
            "the adapter evoq reads it",
            "through"], code=True)
-    d.box("b-mac", 1052, 720, 240, 136, "esqlite", "[library, ~> 0.9]",
+    d.box("b-lib", 1052, 720, 240, 136, "esqlite", "[library, ~> 0.9]",
           ["one sqlite file per store;",
            "the NIF connection belongs",
            "to the process that opened it"], code=True)
