@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 1310" role="img" aria-label="mcl-bookclub components">
+<title>mcl-bookclub components</title>
+<style>
+.t-name { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; }
+.t-desc { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; }
+.t-rel { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; paint-order: stroke; stroke-width: 4px; stroke-linejoin: round; }
+.t-code { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+.t-type { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; }
+.t-bound { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 12px; font-weight: 600; }
+.t-leg { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; }
+.edge { fill: none; stroke-width: 1.25; }
+.edge-later { fill: none; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bg { fill: #FFFFFF; }
+.b-sys { fill: #F5E9CC; stroke: #A56F0A; stroke-width: 2; }
+.b-per { fill: #E3EBF2; stroke: #3B5B7A; stroke-width: 1.25; }
+.b-mac { fill: #E6E4EE; stroke: #5E5A78; stroke-width: 1.25; }
+.b-ext { fill: #ECEFED; stroke: #8A9791; stroke-width: 1.25; }
+.b-cmp { fill: #FFFFFF; stroke: #8A9791; stroke-width: 1.25; }
+.b-later { fill: none; stroke: #8A9791; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bound { fill: none; stroke: #B3BDB8; stroke-width: 1; }
+.head { fill: #3B5B7A; }
+.t-name, .t-code { fill: #16201D; }
+.t-type, .t-bound, .t-leg { fill: #66736E; }
+.t-desc { fill: #34413C; }
+.t-rel { fill: #66736E; stroke: #FFFFFF; }
+.edge, .edge-later { stroke: #8A9791; }
+.arrowhead { fill: #8A9791; }
+@media (prefers-color-scheme: dark) {
+.bg { fill: #171F1C; }
+.b-sys { fill: #3A2E13; stroke: #E3AA3C; }
+.b-per { fill: #1D2A36; stroke: #8EB4D8; }
+.b-mac { fill: #26243A; stroke: #A9A4C8; }
+.b-ext { fill: #1C2421; stroke: #7D8B85; }
+.b-cmp { fill: #171F1C; stroke: #7D8B85; }
+.b-later { stroke: #7D8B85; }
+.bound { stroke: #4A5752; }
+.head { fill: #8EB4D8; }
+.t-name, .t-code { fill: #E6ECE9; }
+.t-type, .t-bound, .t-leg { fill: #93A09A; }
+.t-desc { fill: #C3CDC8; }
+.t-rel { fill: #93A09A; stroke: #171F1C; }
+.edge, .edge-later { stroke: #7D8B85; }
+.arrowhead { fill: #7D8B85; }
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="bg" x="0" y="0" width="1340" height="1310"/>
+<rect class="bound" x="16" y="40" width="1292" height="856" rx="12"/>
+<text class="t-bound" x="32" y="62">mcl-bookclub [Container] - one OTP release, four apps</text>
+<rect class="b-cmp" x="32" y="76" width="340" height="136" rx="10"/>
+<text class="t-code" x="48" y="104">mcl_bookclub_service</text>
+<text class="t-type" x="48" y="122">[mcl_om_service behaviour]</text>
+<text class="t-desc" x="48" y="146">The six callbacks mcl_om resolves by name</text>
+<text class="t-desc" x="48" y="162">plus event_store/0: info, start, stop,</text>
+<text class="t-desc" x="48" y="178">health, capabilities, identity_spec</text>
+<rect class="b-cmp" x="492" y="76" width="340" height="136" rx="10"/>
+<text class="t-code" x="508" y="104">mcl_bookclub_app</text>
+<text class="t-type" x="508" y="122">[OTP application]</text>
+<text class="t-desc" x="508" y="146">Opens the store from event_store/0, then</text>
+<text class="t-desc" x="508" y="162">lets mcl_om:boot/1 wire the mesh, the</text>
+<text class="t-desc" x="508" y="178">realm identity, capabilities and health</text>
+<rect class="b-cmp" x="952" y="76" width="340" height="136" rx="10"/>
+<text class="t-code" x="968" y="104">mcl_bookclub_sup</text>
+<text class="t-type" x="968" y="122">[supervisor, one_for_one]</text>
+<text class="t-desc" x="968" y="146">One child, the LAN admin listener.</text>
+<text class="t-desc" x="968" y="162">Aggregates, the stores and the handlers</text>
+<text class="t-desc" x="968" y="178">live in their own divisions</text>
+<rect class="b-sys" x="32" y="272" width="340" height="136" rx="10"/>
+<text class="t-code" x="48" y="300">mcl_bookclub_get_bookclub_by_id</text>
+<text class="t-type" x="48" y="318">[macula_response provider]</text>
+<text class="t-desc" x="48" y="342">handle_request/2 unwraps club_id and</text>
+<text class="t-desc" x="48" y="358">answers from the QRY desk; text goes</text>
+<text class="t-desc" x="48" y="374">back as CBOR text, booleans as 1/0</text>
+<rect class="b-cmp" x="492" y="272" width="340" height="136" rx="10"/>
+<text class="t-code" x="508" y="300">mcl_bookclub_store</text>
+<text class="t-type" x="508" y="318">[this service's reckon-db store]</text>
+<text class="t-desc" x="508" y="342">start_store, wait up to 30 s until it is</text>
+<text class="t-desc" x="508" y="358">listed, then start the evoq subscription</text>
+<text class="t-desc" x="508" y="374">that feeds every handler in every app</text>
+<rect class="b-cmp" x="952" y="272" width="340" height="136" rx="10"/>
+<text class="t-code" x="968" y="300">mcl_bookclub_admin</text>
+<text class="t-type" x="968" y="318">[cowboy listener]</text>
+<text class="t-desc" x="968" y="342">Nine POST routes through each desk's _api</text>
+<text class="t-desc" x="968" y="358">entry point, five GET routes through the</text>
+<text class="t-desc" x="968" y="374">QRY desks; MCL_ADMIN_PORT, JSON by jsx</text>
+<rect class="b-cmp" x="32" y="468" width="340" height="180" rx="10"/>
+<text class="t-code" x="48" y="496">query_bookclub</text>
+<text class="t-type" x="48" y="514">[QRY division]</text>
+<text class="t-desc" x="48" y="538">bookclub_query_store: one esqlite</text>
+<text class="t-desc" x="48" y="554">connection, q/2 only, so a query desk</text>
+<text class="t-desc" x="48" y="570">cannot write. Five pure desks:</text>
+<text class="t-desc" x="48" y="586">get_bookclub_by_id, get_member_by_id,</text>
+<text class="t-desc" x="48" y="602">get_book_by_id, get_reading_by_id,</text>
+<text class="t-desc" x="48" y="618">get_readings_by_member</text>
+<rect class="b-cmp" x="492" y="468" width="340" height="180" rx="10"/>
+<text class="t-code" x="508" y="496">project_bookclub</text>
+<text class="t-type" x="508" y="514">[PRJ division]</text>
+<text class="t-desc" x="508" y="538">bookclub_read_model_store owns the DDL</text>
+<text class="t-desc" x="508" y="554">and every write; eight projections, one</text>
+<text class="t-desc" x="508" y="570">evoq_event_handler each, one INSERT OR</text>
+<text class="t-desc" x="508" y="586">REPLACE per event, so a replay of the</text>
+<text class="t-desc" x="508" y="602">log writes the same rows again</text>
+<text class="t-desc" x="508" y="618">idempotently</text>
+<rect class="b-cmp" x="952" y="468" width="340" height="180" rx="10"/>
+<text class="t-code" x="968" y="496">host_bookclub</text>
+<text class="t-type" x="968" y="514">[CMD division]</text>
+<text class="t-desc" x="968" y="538">Nine desks: initiate, archive, register,</text>
+<text class="t-desc" x="968" y="554">unregister, procure, retire, start and</text>
+<text class="t-desc" x="968" y="570">finish reading, plan_party; the</text>
+<text class="t-desc" x="968" y="586">on_member_registered_v1_maybe_plan_party</text>
+<text class="t-desc" x="968" y="602">policy and three emit_*_v1_to_mesh</text>
+<text class="t-desc" x="968" y="618">handlers</text>
+<text class="t-desc" x="32" y="706">The libraries every app links:</text>
+<rect class="b-mac" x="32" y="720" width="240" height="136" rx="10"/>
+<text class="t-code" x="48" y="748">mcl_om</text>
+<text class="t-type" x="48" y="766">[library, ~&gt; 1.4]</text>
+<text class="t-desc" x="48" y="790">boot/1: node key, realm join,</text>
+<text class="t-desc" x="48" y="806">QUIC pool, capability</text>
+<text class="t-desc" x="48" y="822">registration, /health</text>
+<rect class="b-mac" x="287" y="720" width="240" height="136" rx="10"/>
+<text class="t-code" x="303" y="748">macula</text>
+<text class="t-type" x="303" y="766">[library, ~&gt; 16.0]</text>
+<text class="t-desc" x="303" y="790">QUIC transport, RPC by</text>
+<text class="t-desc" x="303" y="806">name, publish on a topic,</text>
+<text class="t-desc" x="303" y="822">signed DHT records</text>
+<rect class="b-mac" x="542" y="720" width="240" height="136" rx="10"/>
+<text class="t-code" x="558" y="748">evoq</text>
+<text class="t-type" x="558" y="766">[&gt;= 1.26.1, &lt; 2.0.0]</text>
+<text class="t-desc" x="558" y="790">dispatch, aggregates, the</text>
+<text class="t-desc" x="558" y="806">event-type registry, the</text>
+<text class="t-desc" x="558" y="822">$all subscription</text>
+<rect class="b-mac" x="797" y="720" width="240" height="136" rx="10"/>
+<text class="t-code" x="813" y="748">reckon_db + reckon_evoq</text>
+<text class="t-type" x="813" y="766">[~&gt; 5.4, &gt;= 2.7.2]</text>
+<text class="t-desc" x="813" y="790">the event log on disk and</text>
+<text class="t-desc" x="813" y="806">the adapter evoq reads it</text>
+<text class="t-desc" x="813" y="822">through</text>
+<rect class="b-mac" x="1052" y="720" width="240" height="136" rx="10"/>
+<text class="t-code" x="1068" y="748">esqlite</text>
+<text class="t-type" x="1068" y="766">[library, ~&gt; 0.9]</text>
+<text class="t-desc" x="1068" y="790">one sqlite file per store;</text>
+<text class="t-desc" x="1068" y="806">the NIF connection belongs</text>
+<text class="t-desc" x="1068" y="822">to the process that opened it</text>
+<rect class="b-ext" x="32" y="936" width="600" height="104" rx="10"/>
+<text class="t-code" x="48" y="964">MCL_DATA_DIR</text>
+<text class="t-type" x="48" y="982">[environment, /data in the image]</text>
+<text class="t-desc" x="48" y="1006">read by event_store/0 and by both division</text>
+<text class="t-desc" x="48" y="1022">supervisors; the log and the read model live under it</text>
+<rect class="b-ext" x="652" y="936" width="640" height="104" rx="10"/>
+<text class="t-code" x="668" y="964">MCL_ADMIN_PORT</text>
+<text class="t-type" x="668" y="982">[environment, 8488 by default]</text>
+<text class="t-desc" x="668" y="1006">the cowboy listener binds every interface: the admin</text>
+<text class="t-desc" x="668" y="1022">UI is the box's LAN tool, not a mesh procedure</text>
+<rect class="b-ext" x="32" y="1068" width="1260" height="104" rx="10"/>
+<text class="t-code" x="48" y="1096">MCL_REALM, MCL_REALM_KEY, MACULA_STATION_SEEDS, MACULA_STATION_NODE_IDS</text>
+<text class="t-type" x="48" y="1114">[environment, config/sys.config.src and deploy/docker-compose.yml]</text>
+<text class="t-desc" x="48" y="1138">substituted by relx at boot; the compose file refuses to start without all four,</text>
+<text class="t-desc" x="48" y="1154">so a half-configured node never announces itself where nobody can attribute it</text>
+<path class="edge" d="M372 190H492" marker-end="url(#a)"/>
+<text class="t-rel" x="432" y="182" text-anchor="middle">reads event_store/0</text>
+<path class="edge" d="M150 212V272" marker-end="url(#a)"/>
+<text class="t-rel" x="158" y="246">capabilities/0 names the handler</text>
+<path class="edge" d="M632 212V272" marker-end="url(#a)"/>
+<text class="t-rel" x="640" y="246">opens it before boot</text>
+<path class="edge" d="M1112 212V272" marker-end="url(#a)"/>
+<text class="t-rel" x="1120" y="246">one child: the listener</text>
+<path class="edge" d="M150 408V468" marker-end="url(#a)"/>
+<text class="t-rel" x="158" y="442">answers from the QRY desk</text>
+<path class="edge" d="M632 408V468" marker-end="url(#a)"/>
+<text class="t-rel" x="640" y="442">delivers every event</text>
+<path class="edge" d="M1112 408V468" marker-end="url(#a)"/>
+<text class="t-rel" x="1120" y="442">through the _api desks</text>
+<text class="t-desc" x="32" y="1206">config/sys.config.src fixes the org mcl-bookclub, pins the realm key and the two station node ids, and carries the evoq</text>
+<text class="t-desc" x="32" y="1224">block that names mcl_bookclub_store; without it the subscription crashes on {not_configured, event_store_adapter}.</text>
+<text class="t-desc" x="32" y="1242">PRJ writes the one sqlite file and QRY reads it; a schema-contract test pins the columns one selects to the other's DDL.</text>
+<rect class="b-sys" x="24" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="54" y="1280">In scope</text>
+<rect class="b-per" x="110.8" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="140.8" y="1280">Person</text>
+<rect class="b-mac" x="184.39999999999998" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="214.39999999999998" y="1280">Macula infrastructure</text>
+<rect class="b-ext" x="357.0" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="387.0" y="1280">External system</text>
+<rect class="b-cmp" x="490.0" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="520.0" y="1280">Container or component</text>
+<rect class="bound" x="669.2" y="1268" width="22" height="14" rx="3"/>
+<text class="t-leg" x="699.2" y="1280">Boundary</text>
+</svg>
