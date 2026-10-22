@@ -21,7 +21,7 @@ served on a Unix socket.
 | Mesh consumer | Person | Another service or app on the mesh: calls the one advertised procedure and subscribes to the three fact topics |
 | Host disk, `/data` | External system | Holds the reckon-db event log at `/data/mcl_bookclub_store` and the sqlite read model at `/data/bookclub.sqlite3`. Without the volume a recreate forgets the club |
 | macula-realm | Macula infrastructure | Endorses the node's identity key and grants the scope `mcl-bookclub`: one action and three fact topics |
-| Macula stations, mesh DHT | Macula infrastructure | The two pinned stations are the service's mesh entry points over QUIC; the DHT holds the advertised procedure and carries the fact topics |
+| Macula stations, mesh DHT | Macula infrastructure | The the pinned stations are the service's mesh entry points over QUIC; the DHT holds the advertised procedure and carries the fact topics |
 
 The domain stays inside the service. Only `member_registered_v1`,
 `book_procured_v1` and `book_retired_v1` leave, as facts on their own topics with
@@ -52,12 +52,13 @@ query desk is answered from the local read model.
 | `MCL_ADMIN_PORT` | environment | The cowboy listener's port, 8488 in the Containerfile. It binds every interface: the admin UI is the box's LAN tool |
 | `MCL_REALM`, `MCL_REALM_KEY`, `MACULA_STATION_SEEDS`, `MACULA_STATION_NODE_IDS` | environment | Substituted by relx at boot. The compose file refuses to start without all four, so a half-configured node never announces itself |
 
-`config/sys.config.src` fixes the org `mcl-bookclub`, pins the realm key and the
-two station node ids, and carries the `evoq` block that names
+`config/sys.config.src` fixes the org `mcl-bookclub`, pins the realm key, and carries the `evoq` block that names
 `mcl_bookclub_store`; without it the store subscription crashes on
 `{not_configured, event_store_adapter}`. PRJ writes the one sqlite file and QRY
 reads it, and a schema-contract test pins the columns one selects to the DDL the
 other declares.
+
+**Where the station list comes from.** It is not in `config/sys.config.src`: `mcl_om` reads `MACULA_STATION_SEEDS` and `MACULA_STATION_NODE_IDS` from the environment at boot, paired index for index, so this repository pins no station and the list may be any length.
 
 ## Drawing them
 
@@ -76,5 +77,5 @@ classes plus a `prefers-color-scheme` dark block, never CSS custom properties,
 which `rsvg-convert` renders black.
 
 The check that keeps them here is the `c4-model` job in
-`.github/workflows/build-push.yml`. It is red until both files exist and are
+`.github/workflows/c4-model.yml`. It is red until both files exist and are
 shown, and it stays red if either one goes missing.

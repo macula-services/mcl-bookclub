@@ -247,7 +247,7 @@ def components():
            "UI is the box's LAN tool, not a mesh procedure"], code=True)
     d.box("b-ext", 32, 1068, 1260, 104, "MCL_REALM, MCL_REALM_KEY, MACULA_STATION_SEEDS, MACULA_STATION_NODE_IDS",
           "[environment, config/sys.config.src and deploy/docker-compose.yml]",
-          ["substituted by relx at boot; the compose file refuses to start without all four,",
+          ["read from the environment at boot; the compose file refuses to start without all four,",
            "so a half-configured node never announces itself where nobody can attribute it"], code=True)
     # The wiring between the boxes.
     d.edge("M372 190H492"); d.text("t-rel", 432, 182, "reads event_store/0", anchor="middle")
@@ -257,7 +257,7 @@ def components():
     d.edge("M150 408V468"); d.text("t-rel", 158, 442, "answers from the QRY desk")
     d.edge("M632 408V468"); d.text("t-rel", 640, 442, "delivers every event")
     d.edge("M1112 408V468"); d.text("t-rel", 1120, 442, "through the _api desks")
-    d.text("t-desc", 32, 1206, "config/sys.config.src fixes the org mcl-bookclub, pins the realm key and the two station node ids, and carries the evoq")
+    d.text("t-desc", 32, 1206, "config/sys.config.src fixes the org mcl-bookclub, pins the realm key, and carries the evoq")
     d.text("t-desc", 32, 1224, "block that names mcl_bookclub_store; without it the subscription crashes on {not_configured, event_store_adapter}.")
     d.text("t-desc", 32, 1242, "PRJ writes the one sqlite file and QRY reads it; a schema-contract test pins the columns one selects to the other's DDL.")
     d.legend(1268)

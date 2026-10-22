@@ -154,7 +154,7 @@
 <rect class="b-ext" x="32" y="1068" width="1260" height="104" rx="10"/>
 <text class="t-code" x="48" y="1096">MCL_REALM, MCL_REALM_KEY, MACULA_STATION_SEEDS, MACULA_STATION_NODE_IDS</text>
 <text class="t-type" x="48" y="1114">[environment, config/sys.config.src and deploy/docker-compose.yml]</text>
-<text class="t-desc" x="48" y="1138">substituted by relx at boot; the compose file refuses to start without all four,</text>
+<text class="t-desc" x="48" y="1138">read from the environment at boot; the compose file refuses to start without all four,</text>
 <text class="t-desc" x="48" y="1154">so a half-configured node never announces itself where nobody can attribute it</text>
 <path class="edge" d="M372 190H492" marker-end="url(#a)"/>
 <text class="t-rel" x="432" y="182" text-anchor="middle">reads event_store/0</text>
@@ -170,7 +170,7 @@
 <text class="t-rel" x="640" y="442">delivers every event</text>
 <path class="edge" d="M1112 408V468" marker-end="url(#a)"/>
 <text class="t-rel" x="1120" y="442">through the _api desks</text>
-<text class="t-desc" x="32" y="1206">config/sys.config.src fixes the org mcl-bookclub, pins the realm key and the two station node ids, and carries the evoq</text>
+<text class="t-desc" x="32" y="1206">config/sys.config.src fixes the org mcl-bookclub, pins the realm key, and carries the evoq</text>
 <text class="t-desc" x="32" y="1224">block that names mcl_bookclub_store; without it the subscription crashes on {not_configured, event_store_adapter}.</text>
 <text class="t-desc" x="32" y="1242">PRJ writes the one sqlite file and QRY reads it; a schema-contract test pins the columns one selects to the other's DDL.</text>
 <rect class="b-sys" x="24" y="1268" width="22" height="14" rx="3"/>
