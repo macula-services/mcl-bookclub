@@ -155,9 +155,9 @@
 <text class="t-desc" x="668" y="1022">UI is the box's LAN tool, not a mesh procedure</text>
 <rect class="b-ext" x="32" y="1068" width="1260" height="104" rx="10"/>
 <text class="t-code" x="48" y="1096">MCL_REALM, MCL_REALM_KEY, MACULA_STATION_SEEDS, MACULA_STATION_NODE_IDS</text>
-<text class="t-type" x="48" y="1114">[environment, config/sys.config.src and deploy/docker-compose.yml]</text>
-<text class="t-desc" x="48" y="1138">read from the environment at boot; the compose file refuses to start without all four,</text>
-<text class="t-desc" x="48" y="1154">so a half-configured node never announces itself where nobody can attribute it</text>
+<text class="t-type" x="48" y="1114">[environment: realm pair via sys.config.src, station pair read by mcl_om]</text>
+<text class="t-desc" x="48" y="1138">the compose file refuses to start without all four, so a half-configured node</text>
+<text class="t-desc" x="48" y="1154">never announces itself where nobody can attribute it</text>
 <path class="edge" d="M372 190H492" marker-end="url(#a)"/>
 <text class="t-rel" x="432" y="182" text-anchor="middle">reads event_store/0</text>
 <path class="edge" d="M150 212V272" marker-end="url(#a)"/>

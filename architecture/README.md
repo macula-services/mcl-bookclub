@@ -6,9 +6,10 @@ of, without reading it.*
 **Status: the full domain, end to end.** One OTP release holds four apps: a facade
 that owns the mesh contract, a CMD division with nine desks, a policy and three mesh
 emitters, a PRJ division projecting eight events into one sqlite read model, and a
-QRY division answering from it. One procedure is advertised on the mesh,
-`mcl-bookclub/get_bookclub_by_id`; the LAN admin UI runs on 8488; `/health` is
-served on a Unix socket.
+QRY division answering from it. `mcl-bookclub/get_bookclub_by_id` is its own
+procedure, and the only one; `mcl-om` adds `mcl-bookclub/info` and
+`mcl-bookclub/get_limits` to every service, both open, and `capabilities/0` is
+the list. The LAN admin UI runs on 8488; `/health` is served on a Unix socket.
 
 ## Level 1: system context
 
@@ -18,10 +19,10 @@ served on a Unix socket.
 | --- | --- | --- |
 | mcl-bookclub | In scope | One OTP release with four apps. Serves `mcl-bookclub/get_bookclub_by_id` on the mesh, the admin UI on 8488, and `/health` on a Unix socket |
 | Club operator | Person | Runs the club from the LAN admin UI: initiates a club, registers and unregisters members, procures and retires books, starts and finishes readings, plans parties |
-| Mesh consumer | Person | Another service or app on the mesh: calls the one advertised procedure and subscribes to the three fact topics |
+| Mesh consumer | Person | Another service or app on the mesh: calls `mcl-bookclub/get_bookclub_by_id` and subscribes to the three fact topics |
 | Host disk, `/data` | External system | Holds the reckon-db event log at `/data/mcl_bookclub_store` and the sqlite read model at `/data/bookclub.sqlite3`. Without the volume a recreate forgets the club |
 | macula-realm | Macula infrastructure | Endorses the node's identity key and grants the scope `mcl-bookclub`: one action and three fact topics |
-| Macula stations, mesh DHT | Macula infrastructure | The the pinned stations are the service's mesh entry points over QUIC; the DHT holds the advertised procedure and carries the fact topics |
+| Macula stations, mesh DHT | Macula infrastructure | The pinned stations are its mesh entry points over QUIC; the DHT holds its own procedure's advert and carries the fact topics |
 
 The domain stays inside the service. Only `member_registered_v1`,
 `book_procured_v1` and `book_retired_v1` leave, as facts on their own topics with
@@ -50,7 +51,7 @@ query desk is answered from the local read model.
 | `esqlite` | library, `~> 0.9` | One sqlite file per store; a NIF connection belongs to the process that opened it |
 | `MCL_DATA_DIR` | environment | Read by `event_store/0` and by both division supervisors. `/data` in the image, `<dir>/mcl_bookclub_store` and `<dir>/bookclub.sqlite3` under it |
 | `MCL_ADMIN_PORT` | environment | The cowboy listener's port, 8488 in the Containerfile. It binds every interface: the admin UI is the box's LAN tool |
-| `MCL_REALM`, `MCL_REALM_KEY`, `MACULA_STATION_SEEDS`, `MACULA_STATION_NODE_IDS` | environment | Substituted by relx at boot. The compose file refuses to start without all four, so a half-configured node never announces itself |
+| `MCL_REALM`, `MCL_REALM_KEY`, `MACULA_STATION_SEEDS`, `MACULA_STATION_NODE_IDS` | environment | The realm pair comes in through `config/sys.config.src`, which relx substitutes at boot; the station pair is read from the environment by `mcl_om` itself. The compose file refuses to start without all four, so a half-configured node never announces itself |
 
 `config/sys.config.src` fixes the org `mcl-bookclub`, pins the realm key, and carries the `evoq` block that names
 `mcl_bookclub_store`; without it the store subscription crashes on

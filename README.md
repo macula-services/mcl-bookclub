@@ -38,7 +38,10 @@ and every rule that protects a decision is a test.
 A command dispatched in CMD lands as an event in the store; the `$all`
 subscription delivers it to the PRJ projections, which write the sqlite read
 model; QRY answers questions from it. The facade advertises QRY's answers as
-mesh capabilities — that wiring is the only place the mesh meets the domain.
+mesh capabilities, and that wiring is the only place the mesh meets the domain.
+`mcl-bookclub/get_bookclub_by_id` is its own procedure, and the only one;
+`mcl-om` adds `mcl-bookclub/info` and `mcl-bookclub/get_limits` to every
+service, both open, and `capabilities/0` is the list.
 
 ## Status: the full domain, end to end
 

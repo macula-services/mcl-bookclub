@@ -5,8 +5,8 @@
 #   scripts/is_image_push.sh <before-sha> <after-sha>
 #
 # It builds UNLESS it can show that every changed path is documentation.
-# A push to main rebuilds :latest and watchtower rolls every box watching it,
-# so a README edit is not worth a restart. Every case this script cannot read
+# A push to main rebuilds and publishes the image, so a README edit is not
+# worth a rebuild. Every case this script cannot read
 # is a build: no before sha (a manual run), the all-zeros sha (a new branch or
 # tag), a before sha that is not in the history (a force push), and an empty
 # diff.

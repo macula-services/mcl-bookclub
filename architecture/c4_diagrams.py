@@ -139,10 +139,10 @@ def context():
     d.box("b-per", 690, 30, 270, 120, "Mesh consumer", "[Person, app or service]",
           ["Calls mcl-bookclub/", "get_bookclub_by_id and",
            "subscribes to the fact topics"], person=True)
-    d.box("b-sys", 365, 186, 270, 152, "mcl-bookclub", "[mcl_om mesh service, own box]",
-          ["Four apps in one OTP release:", "facade, CMD, PRJ, QRY. Serves one",
-           "procedure on the mesh, the LAN", "admin UI on 8488, and /health on",
-           "a Unix socket"])
+    d.box("b-sys", 365, 186, 270, 168, "mcl-bookclub", "[mcl_om mesh service, own box]",
+          ["Four apps in one OTP release:", "facade, CMD, PRJ, QRY. Its own",
+           "procedure is get_bookclub_by_id;", "mcl_om adds info and get_limits.",
+           "LAN admin UI on 8488, /health", "on a Unix socket"])
     d.box("b-ext", 40, 400, 270, 120, "Host disk, /data", "[External system]",
           ["The reckon-db event log and the", "sqlite read model; without the",
            "volume a recreate forgets the club"])
@@ -150,14 +150,14 @@ def context():
           ["Endorses the node's identity key", "and grants the scope mcl-bookclub:",
            "one action, three fact topics"])
     d.box("b-mac", 690, 400, 270, 120, "Macula stations, mesh DHT", "[Macula infrastructure]",
-          ["Pinned stations are the mesh entry", "(QUIC); the DHT holds the advertised",
+          ["Pinned stations are the mesh entry", "(QUIC); the DHT holds its own",
            "procedure and carries the facts"])
     d.edge("M175 150V176H400V186")
     d.text("t-rel", 183, 170, "commands on 8488, and reads")
     d.edge("M825 150V176H620V186")
     d.text("t-rel", 690, 170, "calls get_bookclub_by_id")
-    d.edge("M420 338V400"); d.text("t-rel", 428, 370, "boot claim, scope")
-    d.edge("M620 338V368H825V400"); d.text("t-rel", 632, 360, "advertises, publishes 3 facts")
+    d.edge("M420 354V400"); d.text("t-rel", 428, 376, "boot claim, scope")
+    d.edge("M620 354V368H825V400"); d.text("t-rel", 632, 362, "advertises, publishes 3 facts")
     d.edge("M365 300H340V460H310")
     d.text("t-rel", 330, 340, "keeps the log and the read model", anchor="middle", rotate=-90)
     d.text("t-desc", 40, 566, "The domain stays inside: only member_registered_v1, book_procured_v1 and book_retired_v1 leave, as facts on")
@@ -247,9 +247,9 @@ def components():
           ["the cowboy listener binds every interface: the admin",
            "UI is the box's LAN tool, not a mesh procedure"], code=True)
     d.box("b-ext", 32, 1068, 1260, 104, "MCL_REALM, MCL_REALM_KEY, MACULA_STATION_SEEDS, MACULA_STATION_NODE_IDS",
-          "[environment, config/sys.config.src and deploy/docker-compose.yml]",
-          ["read from the environment at boot; the compose file refuses to start without all four,",
-           "so a half-configured node never announces itself where nobody can attribute it"], code=True)
+          "[environment: realm pair via sys.config.src, station pair read by mcl_om]",
+          ["the compose file refuses to start without all four, so a half-configured node",
+           "never announces itself where nobody can attribute it"], code=True)
     # The wiring between the boxes.
     d.edge("M372 190H492"); d.text("t-rel", 432, 182, "reads event_store/0", anchor="middle")
     d.edge("M150 212V272"); d.text("t-rel", 158, 246, "capabilities/0 names the handler")
