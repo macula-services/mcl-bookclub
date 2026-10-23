@@ -101,3 +101,13 @@ the realm and its trust anchor, the PQ crypto profile, and the evoq adapter
 block that names `mcl_bookclub_store`. `deploy/docker-compose.yml` is runnable
 as-is; set `MCL_REALM`, `MCL_REALM_KEY`, `MACULA_STATION_SEEDS` and
 `MACULA_STATION_NODE_IDS` and it dials out to a station and answers `/health`.
+
+## Architecture
+
+The C4 model is in [architecture/README.md](architecture/README.md), with its
+diagrams drawn by `architecture/c4_diagrams.py` into `assets/`. Change the
+script, run it (`python3 architecture/c4_diagrams.py`), and look at the result
+before committing.
+
+![mcl-bookclub system context](assets/c4-context.svg)
+
