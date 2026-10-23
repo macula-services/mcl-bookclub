@@ -80,8 +80,8 @@
 <text class="t-name" x="381" y="428">macula-realm</text>
 <text class="t-type" x="381" y="446">[Macula infrastructure]</text>
 <text class="t-desc" x="381" y="470">Endorses the node's identity key</text>
-<text class="t-desc" x="381" y="486">and grants the scope mcl-bookclub:</text>
-<text class="t-desc" x="381" y="502">one action, three fact topics</text>
+<text class="t-desc" x="381" y="486">and grants the scope mcl-bookclub</text>
+<text class="t-desc" x="381" y="502">for its action and its fact topics</text>
 <rect class="b-mac" x="690" y="400" width="270" height="120" rx="10"/>
 <text class="t-name" x="706" y="428">Macula stations, mesh DHT</text>
 <text class="t-type" x="706" y="446">[Macula infrastructure]</text>

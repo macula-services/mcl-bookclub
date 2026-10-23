@@ -147,8 +147,8 @@ def context():
           ["The reckon-db event log and the", "sqlite read model; without the",
            "volume a recreate forgets the club"])
     d.box("b-mac", 365, 400, 270, 120, "macula-realm", "[Macula infrastructure]",
-          ["Endorses the node's identity key", "and grants the scope mcl-bookclub:",
-           "one action, three fact topics"])
+          ["Endorses the node's identity key", "and grants the scope mcl-bookclub",
+           "for its action and its fact topics"])
     d.box("b-mac", 690, 400, 270, 120, "Macula stations, mesh DHT", "[Macula infrastructure]",
           ["Pinned stations are the mesh entry", "(QUIC); the DHT holds its own",
            "procedure and carries the facts"])
@@ -171,9 +171,9 @@ def components():
     d.bound(16, 40, 1292, 856, "mcl-bookclub [Container] - one OTP release, four apps")
     # Row 1: the contract, its boot, its supervisor.
     d.box("b-cmp", 32, 76, 340, 136, "mcl_bookclub_service", "[mcl_om_service behaviour]",
-          ["The six callbacks mcl_om resolves by name",
-           "plus event_store/0: info, start, stop,",
-           "health, capabilities, identity_spec"], code=True)
+          ["The six mcl_om_service callbacks, resolved",
+           "by name; mcl-om adds info and get_limits,",
+           "both open, beside them."], code=True)
     d.box("b-cmp", 492, 76, 340, 136, "mcl_bookclub_app", "[OTP application]",
           ["Opens the store from event_store/0, then",
            "lets mcl_om:boot/1 wire the mesh, the",
@@ -247,7 +247,7 @@ def components():
           ["the cowboy listener binds every interface: the admin",
            "UI is the box's LAN tool, not a mesh procedure"], code=True)
     d.box("b-ext", 32, 1068, 1260, 104, "MCL_REALM, MCL_REALM_KEY, MACULA_STATION_SEEDS, MACULA_STATION_NODE_IDS",
-          "[environment: realm pair via sys.config.src, station pair read by mcl_om]",
+          "[environment: realm pair in sys.config.src, seeds and node ids via mcl_om]",
           ["the compose file refuses to start without all four, so a half-configured node",
            "never announces itself where nobody can attribute it"], code=True)
     # The wiring between the boxes.
