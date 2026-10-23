@@ -63,7 +63,7 @@
 <text class="t-desc" x="706" y="132">subscribes to the fact topics</text>
 <rect class="b-sys" x="365" y="186" width="270" height="168" rx="10"/>
 <text class="t-name" x="381" y="214">mcl-bookclub</text>
-<text class="t-type" x="381" y="232">[mcl_om mesh service, own box]</text>
+<text class="t-type" x="381" y="232">[mcl_om mesh service]</text>
 <text class="t-desc" x="381" y="256">Four apps in one OTP release:</text>
 <text class="t-desc" x="381" y="272">facade, CMD, PRJ, QRY. Its own</text>
 <text class="t-desc" x="381" y="288">procedure is get_bookclub_by_id;</text>

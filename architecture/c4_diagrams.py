@@ -139,7 +139,7 @@ def context():
     d.box("b-per", 690, 30, 270, 120, "Mesh consumer", "[Person, app or service]",
           ["Calls mcl-bookclub/", "get_bookclub_by_id and",
            "subscribes to the fact topics"], person=True)
-    d.box("b-sys", 365, 186, 270, 168, "mcl-bookclub", "[mcl_om mesh service, own box]",
+    d.box("b-sys", 365, 186, 270, 168, "mcl-bookclub", "[mcl_om mesh service]",
           ["Four apps in one OTP release:", "facade, CMD, PRJ, QRY. Its own",
            "procedure is get_bookclub_by_id;", "mcl_om adds info and get_limits.",
            "LAN admin UI on 8488, /health", "on a Unix socket"])
