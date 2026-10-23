@@ -21,8 +21,8 @@
         %% hour, because nothing translates between the two by itself.
         {realm,             <<"${MCL_REALM}">>},
         %% ONE ORG PER SERVICE, NAMED AFTER THE REPOSITORY: the `Org' in every
-        %% procedure it offers (`Org/Name'), and the org the realm's grant
-        %% names. Fixed here rather than read from the environment, because it
+        %% procedure it offers (`Org/Name'), mcl_om's open `info' and
+        %% `get_limits' included, and the org the realm's grant names. Fixed here rather than read from the environment, because it
         %% is a property of the service, not of where it runs.
         {org,               <<"mcl-bookclub">>},
         %% THE TRUST ANCHOR, AND IT IS NOT OPTIONAL: the realm's public signing

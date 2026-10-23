@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 680" role="img" aria-label="mcl-bookclub system context">
+<title>mcl-bookclub system context</title>
+<style>
+.t-name { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; }
+.t-desc { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; }
+.t-rel { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; paint-order: stroke; stroke-width: 4px; stroke-linejoin: round; }
+.t-code { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+.t-type { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; }
+.t-bound { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 12px; font-weight: 600; }
+.t-leg { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; }
+.edge { fill: none; stroke-width: 1.25; }
+.edge-later { fill: none; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bg { fill: #FFFFFF; }
+.b-sys { fill: #F5E9CC; stroke: #A56F0A; stroke-width: 2; }
+.b-per { fill: #E3EBF2; stroke: #3B5B7A; stroke-width: 1.25; }
+.b-mac { fill: #E6E4EE; stroke: #5E5A78; stroke-width: 1.25; }
+.b-lib { fill: #E7F0E8; stroke: #4A7A55; stroke-width: 1.25; }
+.b-ext { fill: #ECEFED; stroke: #8A9791; stroke-width: 1.25; }
+.b-cmp { fill: #FFFFFF; stroke: #8A9791; stroke-width: 1.25; }
+.b-later { fill: none; stroke: #8A9791; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bound { fill: none; stroke: #B3BDB8; stroke-width: 1; }
+.head { fill: #3B5B7A; }
+.t-name, .t-code { fill: #16201D; }
+.t-type, .t-bound, .t-leg { fill: #66736E; }
+.t-desc { fill: #34413C; }
+.t-rel { fill: #66736E; stroke: #FFFFFF; }
+.edge, .edge-later { stroke: #8A9791; }
+.arrowhead { fill: #8A9791; }
+@media (prefers-color-scheme: dark) {
+.bg { fill: #171F1C; }
+.b-sys { fill: #3A2E13; stroke: #E3AA3C; }
+.b-per { fill: #1D2A36; stroke: #8EB4D8; }
+.b-mac { fill: #26243A; stroke: #A9A4C8; }
+.b-lib { fill: #1A241C; stroke: #8FBE9B; }
+.b-ext { fill: #1C2421; stroke: #7D8B85; }
+.b-cmp { fill: #171F1C; stroke: #7D8B85; }
+.b-later { stroke: #7D8B85; }
+.bound { stroke: #4A5752; }
+.head { fill: #8EB4D8; }
+.t-name, .t-code { fill: #E6ECE9; }
+.t-type, .t-bound, .t-leg { fill: #93A09A; }
+.t-desc { fill: #C3CDC8; }
+.t-rel { fill: #93A09A; stroke: #171F1C; }
+.edge, .edge-later { stroke: #7D8B85; }
+.arrowhead { fill: #7D8B85; }
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="bg" x="0" y="0" width="1000" height="680"/>
+<rect class="b-per" x="40" y="30" width="270" height="120" rx="10"/>
+<circle class="head" cx="66" cy="54" r="9"/>
+<text class="t-name" x="84" y="58">Club operator</text>
+<text class="t-type" x="84" y="76">[Person]</text>
+<text class="t-desc" x="56" y="100">Runs the club from the LAN</text>
+<text class="t-desc" x="56" y="116">admin UI: initiates, registers</text>
+<text class="t-desc" x="56" y="132">members, procures, plans parties</text>
+<rect class="b-per" x="690" y="30" width="270" height="120" rx="10"/>
+<circle class="head" cx="716" cy="54" r="9"/>
+<text class="t-name" x="734" y="58">Mesh consumer</text>
+<text class="t-type" x="734" y="76">[Person, app or service]</text>
+<text class="t-desc" x="706" y="100">Calls mcl-bookclub/</text>
+<text class="t-desc" x="706" y="116">get_bookclub_by_id and</text>
+<text class="t-desc" x="706" y="132">subscribes to the fact topics</text>
+<rect class="b-sys" x="365" y="186" width="270" height="168" rx="10"/>
+<text class="t-name" x="381" y="214">mcl-bookclub</text>
+<text class="t-type" x="381" y="232">[mcl_om mesh service]</text>
+<text class="t-desc" x="381" y="256">Four apps in one OTP release:</text>
+<text class="t-desc" x="381" y="272">facade, CMD, PRJ, QRY. Its own</text>
+<text class="t-desc" x="381" y="288">procedure is get_bookclub_by_id;</text>
+<text class="t-desc" x="381" y="304">mcl_om adds info and get_limits.</text>
+<text class="t-desc" x="381" y="320">LAN admin UI on 8488, /health</text>
+<text class="t-desc" x="381" y="336">on a Unix socket</text>
+<rect class="b-ext" x="40" y="400" width="270" height="120" rx="10"/>
+<text class="t-name" x="56" y="428">Host disk, /data</text>
+<text class="t-type" x="56" y="446">[External system]</text>
+<text class="t-desc" x="56" y="470">The reckon-db event log and the</text>
+<text class="t-desc" x="56" y="486">sqlite read model; without the</text>
+<text class="t-desc" x="56" y="502">volume a recreate forgets the club</text>
+<rect class="b-mac" x="365" y="400" width="270" height="120" rx="10"/>
+<text class="t-name" x="381" y="428">macula-realm</text>
+<text class="t-type" x="381" y="446">[Macula infrastructure]</text>
+<text class="t-desc" x="381" y="470">Endorses the node's identity key</text>
+<text class="t-desc" x="381" y="486">and grants the scope mcl-bookclub</text>
+<text class="t-desc" x="381" y="502">for its action and its fact topics</text>
+<rect class="b-mac" x="690" y="400" width="270" height="120" rx="10"/>
+<text class="t-name" x="706" y="428">Macula stations, mesh DHT</text>
+<text class="t-type" x="706" y="446">[Macula infrastructure]</text>
+<text class="t-desc" x="706" y="470">Pinned stations are the mesh entry</text>
+<text class="t-desc" x="706" y="486">(QUIC); the DHT holds its own</text>
+<text class="t-desc" x="706" y="502">procedure and carries the facts</text>
+<path class="edge" d="M175 150V176H400V186" marker-end="url(#a)"/>
+<text class="t-rel" x="183" y="170">commands on 8488, and reads</text>
+<path class="edge" d="M825 150V176H620V186" marker-end="url(#a)"/>
+<text class="t-rel" x="690" y="170">calls get_bookclub_by_id</text>
+<path class="edge" d="M420 354V400" marker-end="url(#a)"/>
+<text class="t-rel" x="428" y="376">boot claim, scope</text>
+<path class="edge" d="M620 354V368H825V400" marker-end="url(#a)"/>
+<text class="t-rel" x="632" y="362">advertises, publishes 3 facts</text>
+<path class="edge" d="M365 300H340V460H310" marker-end="url(#a)"/>
+<text class="t-rel" x="330" y="340" text-anchor="middle" transform="rotate(-90 330 340)">keeps the log and the read model</text>
+<text class="t-desc" x="40" y="566">The domain stays inside: only member_registered_v1, book_procured_v1 and book_retired_v1 leave, as facts on</text>
+<text class="t-desc" x="40" y="584">their own topics. The mesh never sees a command, and every query desk is answered from the local read model.</text>
+<rect class="b-sys" x="24" y="630" width="22" height="14" rx="3"/>
+<text class="t-leg" x="54" y="642">In scope</text>
+<rect class="b-per" x="110.8" y="630" width="22" height="14" rx="3"/>
+<text class="t-leg" x="140.8" y="642">Person</text>
+<rect class="b-mac" x="184.39999999999998" y="630" width="22" height="14" rx="3"/>
+<text class="t-leg" x="214.39999999999998" y="642">Macula infrastructure</text>
+<rect class="b-lib" x="357.0" y="630" width="22" height="14" rx="3"/>
+<text class="t-leg" x="387.0" y="642">Library</text>
+<rect class="b-ext" x="437.2" y="630" width="22" height="14" rx="3"/>
+<text class="t-leg" x="467.2" y="642">External system</text>
+<rect class="b-cmp" x="570.2" y="630" width="22" height="14" rx="3"/>
+<text class="t-leg" x="600.2" y="642">Container or component</text>
+</svg>
