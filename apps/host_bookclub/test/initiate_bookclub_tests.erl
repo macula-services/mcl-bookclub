@@ -43,8 +43,9 @@ a_second_initiation_is_refused() ->
 
 %% A human-readable id fails the stream contract, and the rejection happens
 %% in the desk's validate/1 -- at the dispatch boundary -- before anything
-%% is appended. The store client RAISES `{invalid_stream_id, _}' on a bad id,
-%% even just reading it; the raise asserted below is the alternative the
+%% is appended. The store client RAISES `{invalid_stream_id, Reason, StreamId,
+%% Rule}' on a bad id, even just reading it (reckon-db 5.11.14's shape, the
+%% producer's); the raise asserted below is the alternative the
 %% desk's validate/1 prevents, which is why validation must live in dispatch
 %% and not only inside the aggregate.
 a_rejected_stream_id_never_touches_the_store() ->
@@ -52,7 +53,7 @@ a_rejected_stream_id_never_touches_the_store() ->
                   #{club_id => <<"the-crooked-shelf">>,
                     name => <<"N">>, initiated_by => <<"bea">>}),
     ?assertMatch({error, _}, maybe_initiate_bookclub:dispatch(Cmd)),
-    ?assertError({error, {invalid_stream_id, _, _}},
+    ?assertError({error, {invalid_stream_id, _, _, _}},
                  host_bookclub_test_store:stream(<<"the-crooked-shelf">>)).
 
 a_command_needs_every_field() ->

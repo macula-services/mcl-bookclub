@@ -75,7 +75,7 @@ a_rejected_stream_id_never_touches_the_store() ->
                     title => <<"Project Hail Mary">>,
                     author => <<"Andy Weir">>}),
     ?assertMatch({error, _}, maybe_procure_book:dispatch(Cmd)),
-    ?assertError({error, {invalid_stream_id, _, _}},
+    ?assertError({error, {invalid_stream_id, _, _, _}},
                  host_bookclub_test_store:stream(<<"project-hail-mary">>)).
 
 a_command_needs_every_field() ->

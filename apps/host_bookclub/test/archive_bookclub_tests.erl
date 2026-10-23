@@ -61,7 +61,7 @@ a_rejected_stream_id_never_touches_the_store() ->
     {ok, Cmd} = archive_bookclub_v1:new(
                   #{club_id => <<"the-crooked-shelf">>, archived_by => <<"raf">>}),
     ?assertMatch({error, _}, maybe_archive_bookclub:dispatch(Cmd)),
-    ?assertError({error, {invalid_stream_id, _, _}},
+    ?assertError({error, {invalid_stream_id, _, _, _}},
                  host_bookclub_test_store:stream(<<"the-crooked-shelf">>)).
 
 a_command_needs_every_field() ->

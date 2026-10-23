@@ -82,7 +82,7 @@ a_rejected_stream_id_never_touches_the_store() ->
                     member_id => register_member_v1:mint_member_id(),
                     book_id => procure_book_v1:mint_book_id()}),
     ?assertMatch({error, _}, maybe_start_reading:dispatch(Cmd)),
-    ?assertError({error, {invalid_stream_id, _, _}},
+    ?assertError({error, {invalid_stream_id, _, _, _}},
                  host_bookclub_test_store:stream(<<"the-reading">>)).
 
 a_command_needs_every_field() ->
