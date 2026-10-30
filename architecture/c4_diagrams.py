@@ -219,11 +219,11 @@ def components():
            "handlers"], code=True)
     # The libraries the release links.
     d.text("t-desc", 32, 706, "The libraries every app links:")
-    d.box("b-lib", 32, 720, 240, 136, "mcl_om", "[library, ~> 1.4]",
+    d.box("b-lib", 32, 720, 240, 136, "mcl_om", "[library, ~> 1.6]",
           ["boot/1: node key, realm join,",
            "QUIC pool, capability",
            "registration, /health"], code=True)
-    d.box("b-lib", 287, 720, 240, 136, "macula", "[library, ~> 16.0]",
+    d.box("b-lib", 287, 720, 240, 136, "macula", "[library, ~> 18.0]",
           ["QUIC transport, RPC by",
            "name, publish on a topic,",
            "signed DHT records"], code=True)

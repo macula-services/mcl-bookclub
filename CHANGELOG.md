@@ -5,17 +5,30 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 0.4.0 - 2026-10-30
 
-- **macula is declared, at 16** (macula-codebase-checks#4, #14). The
-  service called macula modules and compiled against `macula_response`
-  without declaring the application: it arrived transitively through
-  `mcl_om`, so a rebuild took whatever major the newest mcl_om carried.
-  `macula` is now a direct dependency at `~> 16.0` and `mcl_om` is at
-  `~> 1.4`, the release whose own base is macula 16. 16.0 keeps wire 1.0,
-  so this service still speaks to every wire 1.0 box; what it adds is the
-  revocation bound (macula#118). This service gates no overlay and issues
-  no endorsement.
+- **On macula 18 / mcl_om 1.6** (macula-io/macula#147, mcl-om#41), with
+  `macula ~> 18.0` and `mcl_om ~> 1.6` as the declared floors. 18 keeps
+  wire 1.0, so this build still speaks to every wire 1.0 box; what moves is
+  what the SDK requires of a service's own declarations. mcl_om 1.6 refuses to
+  boot a handler-bearing capability that names no `auth` policy, and a
+  subscription that names no `sources`. This service's one capability has
+  carried `auth => open` since it was written — any identified caller that
+  reaches the mesh may look a book club up, which is what it has always
+  served — and it declares no subscriptions, so neither rule asks anything new
+  of it and no reach changes.
+- **The capability test delivers through `mcl_om_wire_test`** (mcl-om#31)
+  rather than hand-building the payload: the request is encoded and decoded
+  the way a station does it, the verified caller is merged the way the link
+  merges it, and the reply is checked the way a provider checks it before
+  answering. The shape asserted is now the one a station hands the handler,
+  which is the fault that let mcl-chess 0.7.1 pass its own tests and refuse
+  every live call.
+- **macula is declared directly** (macula-codebase-checks#4, #14). The service
+  called macula modules and compiled against `macula_response` without
+  declaring the application: it arrived transitively through `mcl_om`, so a
+  rebuild took whatever major the newest mcl_om carried. Naming the major is
+  what stops that, and it is what these floors now do.
 
 ## 0.3.0 - 2026-10-17
 

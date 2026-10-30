@@ -115,13 +115,13 @@
 <text class="t-desc" x="32" y="706">The libraries every app links:</text>
 <rect class="b-lib" x="32" y="720" width="240" height="136" rx="10"/>
 <text class="t-code" x="48" y="748">mcl_om</text>
-<text class="t-type" x="48" y="766">[library, ~&gt; 1.4]</text>
+<text class="t-type" x="48" y="766">[library, ~&gt; 1.6]</text>
 <text class="t-desc" x="48" y="790">boot/1: node key, realm join,</text>
 <text class="t-desc" x="48" y="806">QUIC pool, capability</text>
 <text class="t-desc" x="48" y="822">registration, /health</text>
 <rect class="b-lib" x="287" y="720" width="240" height="136" rx="10"/>
 <text class="t-code" x="303" y="748">macula</text>
-<text class="t-type" x="303" y="766">[library, ~&gt; 16.0]</text>
+<text class="t-type" x="303" y="766">[library, ~&gt; 18.0]</text>
 <text class="t-desc" x="303" y="790">QUIC transport, RPC by</text>
 <text class="t-desc" x="303" y="806">name, publish on a topic,</text>
 <text class="t-desc" x="303" y="822">signed DHT records</text>

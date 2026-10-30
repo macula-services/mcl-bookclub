@@ -44,8 +44,8 @@ query desk is answered from the local read model.
 | `query_bookclub` | QRY division | `bookclub_query_store`: one esqlite connection, `q/2` only, so a query desk cannot write. Five pure desks |
 | `project_bookclub` | PRJ division | `bookclub_read_model_store` owns the DDL and every write; eight projections, one `evoq_event_handler` each, one `INSERT OR REPLACE` per event, so a replay writes the same rows again idempotently |
 | `host_bookclub` | CMD division | Nine desks, the `on_member_registered_v1_maybe_plan_party` policy, and three `emit_*_v1_to_mesh` handlers |
-| `mcl_om` | library, `~> 1.4` | `boot/1`: loads the node key, joins the realm, opens the QUIC pool through the pinned stations, registers the declared capability and serves `/health` |
-| `macula` | library, `~> 16.0` | QUIC transport, RPC dispatch to a provider by name, publishing on a fact topic, and the signed records the DHT holds |
+| `mcl_om` | library, `~> 1.6` | `boot/1`: loads the node key, joins the realm, opens the QUIC pool through the pinned stations, registers the declared capability and serves `/health` |
+| `macula` | library, `~> 18.0` | QUIC transport, RPC dispatch to a provider by name, publishing on a fact topic, and the signed records the DHT holds |
 | `evoq` | library, `>= 1.26.1, < 2.0.0` | Dispatch, aggregates, the event-type registry, and the `$all` subscription that feeds every handler |
 | `reckon_db` + `reckon_evoq` | libraries, `~> 5.4` and `>= 2.7.2` | The event log on disk, and the adapter `evoq` reads it through |
 | `esqlite` | library, `~> 0.9` | One sqlite file per store; a NIF connection belongs to the process that opened it |

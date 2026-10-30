@@ -116,10 +116,13 @@ supervisor_starts_and_stops_test() ->
     exit(Pid, shutdown),
     [application:stop(App) || App <- lists:reverse(Started)].
 
-%% The advertised capability, exercised end to end without the mesh: the
-%% handler reads the wire parameter (all three key/value shapes), the QRY
-%% desk answers from the sqlite read model, and the reply's text comes back
-%% as CBOR text. Nothing boots mcl_om.
+%% The advertised capability, exercised end to end without the mesh, THROUGH
+%% THE WIRE: `mcl_om_wire_test:call/3' encodes the request and decodes it the
+%% way a station does, merges the verified caller the way the link merges it,
+%% and puts the reply through the check a provider runs before answering. A
+%% test that builds the payload by hand agrees with its handler and can
+%% disagree with the wire — mcl-chess 0.7.1 passed 206 tests that way and
+%% refused every live call (mcl-om#31). Nothing here boots mcl_om.
 the_capability_answers_from_the_read_model_test() ->
     DataDir = tmp_dir(),
     os:putenv("MCL_DATA_DIR", DataDir),
@@ -130,20 +133,24 @@ the_capability_answers_from_the_read_model_test() ->
         ClubId = list_to_binary(
                    io_lib:format("bookclub-~32.16.0b", [erlang:unique_integer([positive])])),
         ok = seed_club(Conn, ClubId),
-        {reply, Wire, undefined} =
-            mcl_bookclub_get_bookclub_by_id:handle_request(
-              #{<<"club_id">> => {text, ClubId}}, undefined),
-        ?assertEqual({text, <<"The Crooked Shelf">>}, maps:get(name, Wire)),
-        ?assertEqual({text, <<"active">>}, maps:get(status, Wire)),
-        {error, not_found, undefined} =
-            mcl_bookclub_get_bookclub_by_id:handle_request(
-              #{club_id => <<"bookclub-", (binary:copy(<<"0">>, 32))/binary>>},
-              undefined),
+        Reply = mcl_om_wire_test:call(mcl_bookclub_get_bookclub_by_id,
+                                      #{club_id => ClubId}, a_caller()),
+        ?assertEqual(<<"The Crooked Shelf">>, maps:get(<<"name">>, Reply)),
+        ?assertEqual(<<"active">>, maps:get(<<"status">>, Reply)),
+        ?assertEqual({error, <<"not_found">>},
+                     mcl_om_wire_test:call(
+                       mcl_bookclub_get_bookclub_by_id,
+                       #{club_id => <<"bookclub-", (binary:copy(<<"0">>, 32))/binary>>},
+                       a_caller())),
         lists:foreach(fun(A) -> application:stop(A) end, lists:reverse(Started))
     after
         os:unsetenv("MCL_DATA_DIR"),
         file:del_dir_r(DataDir)
     end.
+
+%% A node id is 32 raw bytes on the wire. The helper refuses the 64-character
+%% hex form on purpose: accepting it would hide the fault it exists to catch.
+a_caller() -> <<0:256>>.
 
 seed_club(Conn, ClubId) ->
     {ok, Stmt} = esqlite3:prepare(
