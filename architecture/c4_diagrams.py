@@ -14,7 +14,12 @@ diagram changes in the same commit.
 
 Colours are plain classes with a prefers-color-scheme: dark block, no CSS custom
 properties (rsvg-convert renders those black), so the SVGs render the same on
-GitHub, in IDE previews and through rsvg-convert. After a change, render each
+GitHub, in IDE previews and through rsvg-convert.
+
+Every thing drawn is one <g class="k-<kind>" data-name="..."> group: k-box with
+its data-x/y/w/h, k-edge named by its label, k-bound, k-note, k-legend. A reader
+of the SVG (a video, a slide, a test) can then pick a thing by kind and name, dim
+the rest, or leave it out, without parsing shapes. After a change, render each
 (rsvg-convert -w 1400 assets/c4-context.svg -o /tmp/c.png) and look at it; keep
 architecture/README.md's tables in step.
 """
@@ -80,6 +85,17 @@ LEGEND = [("b-sys", "In scope"), ("b-per", "Person"), ("b-mac", "Macula infrastr
 BOUNDARY = ("bound", "Boundary")
 
 
+class _Closer:
+    def __init__(self, diagram):
+        self.diagram = diagram
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.diagram.parts.append("</g>")
+
+
 class Diagram:
     def __init__(self, name, title, w, h):
         self.name, self.title, self.w, self.h, self.parts = name, title, w, h, []
@@ -88,6 +104,17 @@ class Diagram:
         a = f' text-anchor="{anchor}"' if anchor else ""
         r = f' transform="rotate({rotate} {x} {y})"' if rotate is not None else ""
         self.parts.append(f'<text class="{cls}" x="{x}" y="{y}"{a}{r}>{escape(s)}</text>')
+
+    def group(self, k, name, **data):
+        """Everything appended inside the with block becomes one named group of kind k."""
+        d = "".join(f' data-{key}="{v}"' for key, v in data.items())
+        self.parts.append(f'<g class="k-{k}" data-name="{escape(name)}"{d}>')
+        return _Closer(self)
+
+    def note(self, x, y, lines, name):
+        with self.group("note", name):
+            for i, line in enumerate(lines):
+                self.text("t-desc", x, y + 18 * i, line)
 
     def box(self, cls, x, y, w, h, name, kind, desc, person=False, code=False):
         # A box that is too small for its own words renders as text on top of the
@@ -99,29 +126,35 @@ class Diagram:
         for line in desc:
             if 16 + 6.2 * len(line) > w - 16:
                 raise ValueError(f"{self.name}: {name}: '{line}' is wider than {w - 32}px")
-        self.parts.append(f'<rect class="{cls}" x="{x}" y="{y}" width="{w}" height="{h}" rx="10"/>')
-        tx = x + 16
-        if person:
-            self.parts.append(f'<circle class="head" cx="{x + 26}" cy="{y + 24}" r="9"/>')
-            tx = x + 44
-        self.text("t-code" if code else "t-name", tx, y + 28, name)
-        self.text("t-type", tx, y + 46, kind)
-        for i, line in enumerate(desc):
-            self.text("t-desc", x + 16, y + 70 + 16 * i, line)
+        with self.group("box", name, kind=cls, x=x, y=y, w=w, h=h):
+            self.parts.append(f'<rect class="{cls}" x="{x}" y="{y}" width="{w}" height="{h}" rx="10"/>')
+            tx = x + 16
+            if person:
+                self.parts.append(f'<circle class="head" cx="{x + 26}" cy="{y + 24}" r="9"/>')
+                tx = x + 44
+            self.text("t-code" if code else "t-name", tx, y + 28, name)
+            self.text("t-type", tx, y + 46, kind)
+            for i, line in enumerate(desc):
+                self.text("t-desc", x + 16, y + 70 + 16 * i, line)
 
     def bound(self, x, y, w, h, label):
-        self.parts.append(f'<rect class="bound" x="{x}" y="{y}" width="{w}" height="{h}" rx="12"/>')
-        self.text("t-bound", x + 16, y + 22, label)
+        with self.group("bound", label, x=x, y=y, w=w, h=h):
+            self.parts.append(f'<rect class="bound" x="{x}" y="{y}" width="{w}" height="{h}" rx="12"/>')
+            self.text("t-bound", x + 16, y + 22, label)
 
-    def edge(self, d, later=False):
-        self.parts.append(f'<path class="{"edge-later" if later else "edge"}" d="{d}" marker-end="url(#a)"/>')
+    def edge(self, d, label, x, y, anchor=None, rotate=None, later=False):
+        """An arrow and the words on it, one group named by the words."""
+        with self.group("edge", label):
+            self.parts.append(f'<path class="{"edge-later" if later else "edge"}" d="{d}" marker-end="url(#a)"/>')
+            self.text("t-rel", x, y, label, anchor=anchor, rotate=rotate)
 
     def legend(self, y, boundary=True):
         x = 24
-        for cls, label in LEGEND + ([BOUNDARY] if boundary else []):
-            self.parts.append(f'<rect class="{cls}" x="{x}" y="{y}" width="22" height="14" rx="3"/>')
-            self.text("t-leg", x + 30, y + 12, label)
-            x += 34 + 6.6 * len(label)
+        with self.group("legend", "legend"):
+            for cls, label in LEGEND + ([BOUNDARY] if boundary else []):
+                self.parts.append(f'<rect class="{cls}" x="{x}" y="{y}" width="22" height="14" rx="3"/>')
+                self.text("t-leg", x + 30, y + 12, label)
+                x += 34 + 6.6 * len(label)
 
     def write(self):
         svg = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {self.w} {self.h}" role="img" '
@@ -152,16 +185,14 @@ def context():
     d.box("b-mac", 690, 400, 270, 120, "Macula stations, mesh DHT", "[Macula infrastructure]",
           ["Pinned stations are the mesh entry", "(QUIC); the DHT holds its own",
            "procedure and carries the facts"])
-    d.edge("M175 150V176H400V186")
-    d.text("t-rel", 183, 170, "commands on 8488, and reads")
-    d.edge("M825 150V176H620V186")
-    d.text("t-rel", 690, 170, "calls get_bookclub_by_id")
-    d.edge("M420 354V400"); d.text("t-rel", 428, 376, "boot claim, scope")
-    d.edge("M620 354V368H825V400"); d.text("t-rel", 632, 362, "advertises, publishes 3 facts")
-    d.edge("M365 300H340V460H310")
-    d.text("t-rel", 330, 340, "keeps the log and the read model", anchor="middle", rotate=-90)
-    d.text("t-desc", 40, 566, "The domain stays inside: only member_registered_v1, book_procured_v1 and book_retired_v1 leave, as facts on")
-    d.text("t-desc", 40, 584, "their own topics. The mesh never sees a command, and every query desk is answered from the local read model.")
+    d.edge("M175 150V176H400V186", "commands on 8488, and reads", 183, 170)
+    d.edge("M825 150V176H620V186", "calls get_bookclub_by_id", 690, 170)
+    d.edge("M420 354V400", "boot claim, scope", 428, 376)
+    d.edge("M620 354V368H825V400", "advertises, publishes 3 facts", 632, 362)
+    d.edge("M365 300H340V460H310", "keeps the log and the read model", 330, 340, anchor="middle", rotate=-90)
+    d.note(40, 566, ["The domain stays inside: only member_registered_v1, book_procured_v1 and book_retired_v1 leave, as facts on",
+                     "their own topics. The mesh never sees a command, and every query desk is answered from the local read model."],
+           "the domain stays inside")
     d.legend(630, boundary=False)
     d.write()
 
@@ -218,7 +249,7 @@ def components():
            "policy and three emit_*_v1_to_mesh",
            "handlers"], code=True)
     # The libraries the release links.
-    d.text("t-desc", 32, 706, "The libraries every app links:")
+    d.note(32, 706, ["The libraries every app links:"], "the libraries every app links")
     d.box("b-lib", 32, 720, 240, 136, "mcl_om", "[library, ~> 1.6]",
           ["boot/1: node key, realm join,",
            "QUIC pool, capability",
@@ -251,16 +282,17 @@ def components():
           ["the compose file refuses to start without all four, so a half-configured node",
            "never announces itself where nobody can attribute it"], code=True)
     # The wiring between the boxes.
-    d.edge("M372 190H492"); d.text("t-rel", 432, 182, "reads event_store/0", anchor="middle")
-    d.edge("M150 212V272"); d.text("t-rel", 158, 246, "capabilities/0 names the handler")
-    d.edge("M632 212V272"); d.text("t-rel", 640, 246, "opens it before boot")
-    d.edge("M1112 212V272"); d.text("t-rel", 1120, 246, "one child: the listener")
-    d.edge("M150 408V468"); d.text("t-rel", 158, 442, "answers from the QRY desk")
-    d.edge("M632 408V468"); d.text("t-rel", 640, 442, "delivers every event")
-    d.edge("M1112 408V468"); d.text("t-rel", 1120, 442, "through the _api desks")
-    d.text("t-desc", 32, 1206, "config/sys.config.src fixes the org mcl-bookclub, pins the realm key, and carries the evoq")
-    d.text("t-desc", 32, 1224, "block that names mcl_bookclub_store; without it the subscription crashes on {not_configured, event_store_adapter}.")
-    d.text("t-desc", 32, 1242, "PRJ writes the one sqlite file and QRY reads it; a schema-contract test pins the columns one selects to the other's DDL.")
+    d.edge("M372 190H492", "reads event_store/0", 432, 182, anchor="middle")
+    d.edge("M150 212V272", "capabilities/0 names the handler", 158, 246)
+    d.edge("M632 212V272", "opens it before boot", 640, 246)
+    d.edge("M1112 212V272", "one child: the listener", 1120, 246)
+    d.edge("M150 408V468", "answers from the QRY desk", 158, 442)
+    d.edge("M632 408V468", "delivers every event", 640, 442)
+    d.edge("M1112 408V468", "through the _api desks", 1120, 442)
+    d.note(32, 1206, ["config/sys.config.src fixes the org mcl-bookclub, pins the realm key, and carries the evoq",
+                      "block that names mcl_bookclub_store; without it the subscription crashes on {not_configured, event_store_adapter}.",
+                      "PRJ writes the one sqlite file and QRY reads it; a schema-contract test pins the columns one selects to the other's DDL."],
+           "the config and the schema contract")
     d.legend(1268)
     d.write()
 
