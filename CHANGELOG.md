@@ -10,9 +10,15 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - **CMD, PRJ and QRY are departments**, as the corpus names them (the division is
   the club itself, the one bounded context). Every comment, test name, app
   description, page and the components picture said "division" for them; the
-  word is now "department" throughout, and `assets/c4-components.svg` is redrawn
-  by `architecture/c4_diagrams.py` with the three boxes labelled so. No code
-  path changes.
+  word is now "department" throughout, and the second C4 picture is redrawn by
+  `architecture/c4_diagrams.py` with the three boxes labelled so. No code path
+  changes.
+- **The second C4 picture is the containers**, C4's level 2: the release is the
+  software system and its four applications are the containers. The file is
+  `assets/c4-containers.svg` (was `c4-components.svg`), its frame says so, and
+  the architecture page's section is "Level 2: containers". The house C4 check
+  accepts `container` for level 2 from macula-io/macula-ci-images#21 on, which
+  `.github/workflows/c4-model.yml` pins.
 
 ## 0.4.0 - 2026-10-30
 

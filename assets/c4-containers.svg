@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 1310" role="img" aria-label="mcl-bookclub components">
-<title>mcl-bookclub components</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1340 1310" role="img" aria-label="mcl-bookclub containers">
+<title>mcl-bookclub containers</title>
 <style>
 .t-name { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; }
 .t-desc { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; }
@@ -47,9 +47,9 @@
 </style>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
 <rect class="bg" x="0" y="0" width="1340" height="1310"/>
-<g class="k-bound" data-name="mcl-bookclub [Container] - one OTP release, four apps" data-x="16" data-y="40" data-w="1292" data-h="856">
+<g class="k-bound" data-name="mcl-bookclub [Software System] - one OTP release, four containers" data-x="16" data-y="40" data-w="1292" data-h="856">
 <rect class="bound" x="16" y="40" width="1292" height="856" rx="12"/>
-<text class="t-bound" x="32" y="62">mcl-bookclub [Container] - one OTP release, four apps</text>
+<text class="t-bound" x="32" y="62">mcl-bookclub [Software System] - one OTP release, four containers</text>
 </g>
 <g class="k-box" data-name="mcl_bookclub_service" data-kind="b-cmp" data-x="32" data-y="76" data-w="340" data-h="136">
 <rect class="b-cmp" x="32" y="76" width="340" height="136" rx="10"/>

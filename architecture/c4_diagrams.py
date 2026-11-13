@@ -3,7 +3,7 @@
 Run:  python3 architecture/c4_diagrams.py
 
   c4-context.svg     Level 1: what the service talks to
-  c4-components.svg  Level 2: what it is made of
+  c4-containers.svg  Level 2: what it is made of
 
 Drawn from the code, never from a template: the callbacks in
 mcl_bookclub_service.erl, the boot in mcl_bookclub_app.erl, the store wiring in
@@ -197,9 +197,9 @@ def context():
     d.write()
 
 
-def components():
-    d = Diagram("c4-components.svg", "mcl-bookclub components", 1340, 1310)
-    d.bound(16, 40, 1292, 856, "mcl-bookclub [Container] - one OTP release, four apps")
+def containers():
+    d = Diagram("c4-containers.svg", "mcl-bookclub containers", 1340, 1310)
+    d.bound(16, 40, 1292, 856, "mcl-bookclub [Software System] - one OTP release, four containers")
     # Row 1: the contract, its boot, its supervisor.
     d.box("b-cmp", 32, 76, 340, 136, "mcl_bookclub_service", "[mcl_om_service behaviour]",
           ["The six mcl_om_service callbacks, resolved",
@@ -298,5 +298,5 @@ def components():
 
 
 if __name__ == "__main__":
-    for make in (context, components):
+    for make in (context, containers):
         make()
