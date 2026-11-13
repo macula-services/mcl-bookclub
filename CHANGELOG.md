@@ -16,9 +16,13 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - **The second C4 picture is the containers**, C4's level 2: the release is the
   software system and its four applications are the containers. The file is
   `assets/c4-containers.svg` (was `c4-components.svg`), its frame says so, and
-  the architecture page's section is "Level 2: containers". The house C4 check
-  accepts `container` for level 2 from macula-io/macula-ci-images#21 on, which
-  `.github/workflows/c4-model.yml` pins.
+  the architecture page's section is "Level 2: containers".
+- **A third C4 picture, the components** of the command application:
+  `assets/c4-components.svg`, drawn by the same script from
+  `apps/host_bookclub/src`, with the nine desks on their four aggregates, the
+  policy, the three emitters and the facts module; "Level 3: components" on the
+  architecture page. The house C4 check, now pinned at its current commit, asks
+  a service for its Context, Container and Component pictures.
 
 ## 0.4.0 - 2026-10-30
 

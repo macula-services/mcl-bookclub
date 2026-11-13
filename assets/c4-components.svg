@@ -1,0 +1,237 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1210" role="img" aria-label="mcl-bookclub components: the command application">
+<title>mcl-bookclub components: the command application</title>
+<style>
+.t-name { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; }
+.t-desc { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12.5px; }
+.t-rel { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 11.5px; paint-order: stroke; stroke-width: 4px; stroke-linejoin: round; }
+.t-code { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 13px; font-weight: 600; }
+.t-type { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; }
+.t-bound { font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; font-size: 12px; font-weight: 600; }
+.t-leg { font-family: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; font-size: 12px; }
+.edge { fill: none; stroke-width: 1.25; }
+.edge-later { fill: none; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bg { fill: #FFFFFF; }
+.b-sys { fill: #F5E9CC; stroke: #A56F0A; stroke-width: 2; }
+.b-per { fill: #E3EBF2; stroke: #3B5B7A; stroke-width: 1.25; }
+.b-mac { fill: #E6E4EE; stroke: #5E5A78; stroke-width: 1.25; }
+.b-lib { fill: #E7F0E8; stroke: #4A7A55; stroke-width: 1.25; }
+.b-ext { fill: #ECEFED; stroke: #8A9791; stroke-width: 1.25; }
+.b-cmp { fill: #FFFFFF; stroke: #8A9791; stroke-width: 1.25; }
+.b-later { fill: none; stroke: #8A9791; stroke-width: 1.25; stroke-dasharray: 5 4; }
+.bound { fill: none; stroke: #B3BDB8; stroke-width: 1; }
+.head { fill: #3B5B7A; }
+.t-name, .t-code { fill: #16201D; }
+.t-type, .t-bound, .t-leg { fill: #66736E; }
+.t-desc { fill: #34413C; }
+.t-rel { fill: #66736E; stroke: #FFFFFF; }
+.edge, .edge-later { stroke: #8A9791; }
+.arrowhead { fill: #8A9791; }
+@media (prefers-color-scheme: dark) {
+.bg { fill: #171F1C; }
+.b-sys { fill: #3A2E13; stroke: #E3AA3C; }
+.b-per { fill: #1D2A36; stroke: #8EB4D8; }
+.b-mac { fill: #26243A; stroke: #A9A4C8; }
+.b-lib { fill: #1A241C; stroke: #8FBE9B; }
+.b-ext { fill: #1C2421; stroke: #7D8B85; }
+.b-cmp { fill: #171F1C; stroke: #7D8B85; }
+.b-later { stroke: #7D8B85; }
+.bound { stroke: #4A5752; }
+.head { fill: #8EB4D8; }
+.t-name, .t-code { fill: #E6ECE9; }
+.t-type, .t-bound, .t-leg { fill: #93A09A; }
+.t-desc { fill: #C3CDC8; }
+.t-rel { fill: #93A09A; stroke: #171F1C; }
+.edge, .edge-later { stroke: #7D8B85; }
+.arrowhead { fill: #7D8B85; }
+}
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="bg" x="0" y="0" width="1400" height="1210"/>
+<g class="k-box" data-name="mcl_bookclub_admin" data-kind="b-cmp" data-x="56" data-y="60" data-w="300" data-h="120">
+<rect class="b-cmp" x="56" y="60" width="300" height="120" rx="10"/>
+<text class="t-code" x="72" y="88">mcl_bookclub_admin</text>
+<text class="t-type" x="72" y="106">[cowboy listener, mcl_bookclub app]</text>
+<text class="t-desc" x="72" y="130">Nine POST routes, one per desk,</text>
+<text class="t-desc" x="72" y="146">each through the desk's _api module</text>
+</g>
+<g class="k-box" data-name="mcl_bookclub_store" data-kind="b-cmp" data-x="376" data-y="60" data-w="300" data-h="120">
+<rect class="b-cmp" x="376" y="60" width="300" height="120" rx="10"/>
+<text class="t-code" x="392" y="88">mcl_bookclub_store</text>
+<text class="t-type" x="392" y="106">[reckon-db store, mcl_bookclub app]</text>
+<text class="t-desc" x="392" y="130">One stream per club, member, book</text>
+<text class="t-desc" x="392" y="146">and reading; its $all subscription</text>
+<text class="t-desc" x="392" y="162">feeds every handler</text>
+</g>
+<g class="k-bound" data-name="host_bookclub [Container] - the command application: nine desks, four aggregates, one policy, three emitters" data-x="40" data-y="216" data-w="1300" data-h="760">
+<rect class="bound" x="40" y="216" width="1300" height="760" rx="12"/>
+<text class="t-bound" x="56" y="238">host_bookclub [Container] - the command application: nine desks, four aggregates, one policy, three emitters</text>
+</g>
+<g class="k-box" data-name="three club desks" data-kind="b-cmp" data-x="56" data-y="252" data-w="300" data-h="136">
+<rect class="b-cmp" x="56" y="252" width="300" height="136" rx="10"/>
+<text class="t-code" x="72" y="280">three club desks</text>
+<text class="t-type" x="72" y="298">[desk: _api, _v1, maybe_, event]</text>
+<text class="t-desc" x="72" y="322">initiate_bookclub -&gt; bookclub_initiated_v1</text>
+<text class="t-desc" x="72" y="338">plan_party -&gt; party_planned_v1</text>
+<text class="t-desc" x="72" y="354">archive_bookclub -&gt; bookclub_archived_v1</text>
+</g>
+<g class="k-box" data-name="two member desks" data-kind="b-cmp" data-x="376" data-y="252" data-w="300" data-h="136">
+<rect class="b-cmp" x="376" y="252" width="300" height="136" rx="10"/>
+<text class="t-code" x="392" y="280">two member desks</text>
+<text class="t-type" x="392" y="298">[desk: _api, _v1, maybe_, event]</text>
+<text class="t-desc" x="392" y="322">register_member -&gt; member_registered_v1</text>
+<text class="t-desc" x="392" y="338">unregister_member -&gt; member_unregistered_v1</text>
+</g>
+<g class="k-box" data-name="two book desks" data-kind="b-cmp" data-x="696" data-y="252" data-w="300" data-h="136">
+<rect class="b-cmp" x="696" y="252" width="300" height="136" rx="10"/>
+<text class="t-code" x="712" y="280">two book desks</text>
+<text class="t-type" x="712" y="298">[desk: _api, _v1, maybe_, event]</text>
+<text class="t-desc" x="712" y="322">procure_book -&gt; book_procured_v1</text>
+<text class="t-desc" x="712" y="338">retire_book -&gt; book_retired_v1</text>
+</g>
+<g class="k-box" data-name="two reading desks" data-kind="b-cmp" data-x="1016" data-y="252" data-w="300" data-h="136">
+<rect class="b-cmp" x="1016" y="252" width="300" height="136" rx="10"/>
+<text class="t-code" x="1032" y="280">two reading desks</text>
+<text class="t-type" x="1032" y="298">[desk: _api, _v1, maybe_, event]</text>
+<text class="t-desc" x="1032" y="322">start_reading -&gt; reading_started_v1</text>
+<text class="t-desc" x="1032" y="338">finish_reading -&gt; reading_finished_v1</text>
+</g>
+<g class="k-box" data-name="bookclub_aggregate" data-kind="b-cmp" data-x="56" data-y="440" data-w="300" data-h="136">
+<rect class="b-cmp" x="56" y="440" width="300" height="136" rx="10"/>
+<text class="t-code" x="72" y="468">bookclub_aggregate</text>
+<text class="t-type" x="72" y="486">[evoq_aggregate, bookclub_state]</text>
+<text class="t-desc" x="72" y="510">One stream per club. Refuses every</text>
+<text class="t-desc" x="72" y="526">command once archived, before any</text>
+<text class="t-desc" x="72" y="542">desk sees it; status is bit flags</text>
+</g>
+<g class="k-box" data-name="member_aggregate" data-kind="b-cmp" data-x="376" data-y="440" data-w="300" data-h="136">
+<rect class="b-cmp" x="376" y="440" width="300" height="136" rx="10"/>
+<text class="t-code" x="392" y="468">member_aggregate</text>
+<text class="t-type" x="392" y="486">[evoq_aggregate, member_state]</text>
+<text class="t-desc" x="392" y="510">One stream per member. Refuses</text>
+<text class="t-desc" x="392" y="526">every command once unregistered;</text>
+<text class="t-desc" x="392" y="542">the member id is minted by the caller</text>
+</g>
+<g class="k-box" data-name="book_aggregate" data-kind="b-cmp" data-x="696" data-y="440" data-w="300" data-h="136">
+<rect class="b-cmp" x="696" y="440" width="300" height="136" rx="10"/>
+<text class="t-code" x="712" y="468">book_aggregate</text>
+<text class="t-type" x="712" y="486">[evoq_aggregate, book_state]</text>
+<text class="t-desc" x="712" y="510">One stream per book on the shelf.</text>
+<text class="t-desc" x="712" y="526">Refuses every command once retired</text>
+</g>
+<g class="k-box" data-name="reading_aggregate" data-kind="b-cmp" data-x="1016" data-y="440" data-w="300" data-h="136">
+<rect class="b-cmp" x="1016" y="440" width="300" height="136" rx="10"/>
+<text class="t-code" x="1032" y="468">reading_aggregate</text>
+<text class="t-type" x="1032" y="486">[evoq_aggregate, reading_state]</text>
+<text class="t-desc" x="1032" y="510">One stream per reading, the child</text>
+<text class="t-desc" x="1032" y="526">of a member and a book. Refuses</text>
+<text class="t-desc" x="1032" y="542">every command once finished</text>
+</g>
+<g class="k-box" data-name="on_member_registered_v1_maybe_plan_party" data-kind="b-cmp" data-x="56" data-y="628" data-w="620" data-h="136">
+<rect class="b-cmp" x="56" y="628" width="620" height="136" rx="10"/>
+<text class="t-code" x="72" y="656">on_member_registered_v1_maybe_plan_party</text>
+<text class="t-type" x="72" y="674">[policy: evoq_event_handler, replay skip]</text>
+<text class="t-desc" x="72" y="698">Every fifth member_registered_v1 dispatches plan_party_v1 to the</text>
+<text class="t-desc" x="72" y="714">club's stream. The counter is in-memory, so the cadence is</text>
+<text class="t-desc" x="72" y="730">best-effort entertainment, not a business invariant</text>
+</g>
+<g class="k-box" data-name="three emitters" data-kind="b-cmp" data-x="696" data-y="628" data-w="620" data-h="136">
+<rect class="b-cmp" x="696" y="628" width="620" height="136" rx="10"/>
+<text class="t-code" x="712" y="656">three emitters</text>
+<text class="t-type" x="712" y="674">[emit_*_v1_to_mesh: evoq_event_handler, replay skip]</text>
+<text class="t-desc" x="712" y="698">emit_member_registered_v1_to_mesh, emit_book_procured_v1_to_mesh and</text>
+<text class="t-desc" x="712" y="714">emit_book_retired_v1_to_mesh: each event becomes one fact on the mesh. A failed</text>
+<text class="t-desc" x="712" y="730">publish is an error return, so evoq's retry owns redelivery</text>
+</g>
+<g class="k-box" data-name="host_bookclub_app" data-kind="b-cmp" data-x="56" data-y="816" data-w="300" data-h="136">
+<rect class="b-cmp" x="56" y="816" width="300" height="136" rx="10"/>
+<text class="t-code" x="72" y="844">host_bookclub_app</text>
+<text class="t-type" x="72" y="862">[OTP application]</text>
+<text class="t-desc" x="72" y="886">start/2 starts host_bookclub_sup</text>
+</g>
+<g class="k-box" data-name="host_bookclub_sup" data-kind="b-cmp" data-x="376" data-y="816" data-w="300" data-h="136">
+<rect class="b-cmp" x="376" y="816" width="300" height="136" rx="10"/>
+<text class="t-code" x="392" y="844">host_bookclub_sup</text>
+<text class="t-type" x="392" y="862">[supervisor, one_for_one]</text>
+<text class="t-desc" x="392" y="886">Four children: the policy and the</text>
+<text class="t-desc" x="392" y="902">three emitters. Aggregates start on</text>
+<text class="t-desc" x="392" y="918">demand under evoq's own supervisors</text>
+</g>
+<g class="k-box" data-name="mcl_bookclub_facts" data-kind="b-cmp" data-x="696" data-y="816" data-w="620" data-h="136">
+<rect class="b-cmp" x="696" y="816" width="620" height="136" rx="10"/>
+<text class="t-code" x="712" y="844">mcl_bookclub_facts</text>
+<text class="t-type" x="712" y="862">[the mesh contract: three facts]</text>
+<text class="t-desc" x="712" y="886">Topic per fact kind; club_id and club_name in every payload, never in</text>
+<text class="t-desc" x="712" y="902">the topic; text as CBOR text, booleans as 1/0. Only it and the emitters</text>
+<text class="t-desc" x="712" y="918">may name the mesh SDK, and the department-boundary test enforces it</text>
+</g>
+<g class="k-box" data-name="Macula mesh" data-kind="b-mac" data-x="696" data-y="1000" data-w="620" data-h="104">
+<rect class="b-mac" x="696" y="1000" width="620" height="104" rx="10"/>
+<text class="t-name" x="712" y="1028">Macula mesh</text>
+<text class="t-type" x="712" y="1046">[through mcl_om and macula]</text>
+<text class="t-desc" x="712" y="1070">macula:publish on the fact topic, with the pool and realm mcl_om holds</text>
+</g>
+<g class="k-edge" data-name="POST, through the desk's _api:handle/1">
+<path class="edge" d="M206 180V252" marker-end="url(#a)"/>
+<text class="t-rel" x="214" y="204">POST, through the desk's _api:handle/1</text>
+</g>
+<g class="k-edge" data-name="maybe_*:dispatch/1 to the club's stream">
+<path class="edge" d="M206 388V440" marker-end="url(#a)"/>
+<text class="t-rel" x="214" y="420">maybe_*:dispatch/1 to the club's stream</text>
+</g>
+<g class="k-edge" data-name="to the member's stream">
+<path class="edge" d="M526 388V440" marker-end="url(#a)"/>
+<text class="t-rel" x="534" y="420">to the member's stream</text>
+</g>
+<g class="k-edge" data-name="to the book's stream">
+<path class="edge" d="M846 388V440" marker-end="url(#a)"/>
+<text class="t-rel" x="854" y="420">to the book's stream</text>
+</g>
+<g class="k-edge" data-name="to the reading's stream">
+<path class="edge" d="M1166 388V440" marker-end="url(#a)"/>
+<text class="t-rel" x="1174" y="420">to the reading's stream</text>
+</g>
+<g class="k-edge" data-name="the $all subscription delivers every event to the four handlers">
+<path class="edge" d="M676 120H1370V696H1316" marker-end="url(#a)"/>
+<text class="t-rel" x="1384" y="420" text-anchor="middle" transform="rotate(90 1384 420)">the $all subscription delivers every event to the four handlers</text>
+</g>
+<g class="k-edge" data-name="every fifth registration: plan_party_v1 to the club desks">
+<path class="edge" d="M56 696H20V320H56" marker-end="url(#a)"/>
+<text class="t-rel" x="14" y="520" text-anchor="middle" transform="rotate(-90 14 520)">every fifth registration: plan_party_v1 to the club desks</text>
+</g>
+<g class="k-edge" data-name="builds the fact, picks the topic">
+<path class="edge" d="M1006 764V816" marker-end="url(#a)"/>
+<text class="t-rel" x="1014" y="796">builds the fact, picks the topic</text>
+</g>
+<g class="k-edge" data-name="publishes">
+<path class="edge" d="M1006 952V1000" marker-end="url(#a)"/>
+<text class="t-rel" x="1014" y="982">publishes</text>
+</g>
+<g class="k-edge" data-name="starts">
+<path class="edge" d="M356 884H376" marker-end="url(#a)"/>
+<text class="t-rel" x="360" y="876">starts</text>
+</g>
+<g class="k-edge" data-name="supervises">
+<path class="edge" d="M526 816V764" marker-end="url(#a)"/>
+<text class="t-rel" x="534" y="796">supervises</text>
+</g>
+<g class="k-note" data-name="events go to the stream, then to every handler">
+<text class="t-desc" x="56" y="1140">Every event a desk produces is appended to its aggregate's stream in mcl_bookclub_store (the mcl_bookclub app), and the</text>
+<text class="t-desc" x="56" y="1158">store's $all subscription hands it to the policy and the emitters here and to the eight projections in project_bookclub.</text>
+</g>
+<g class="k-legend" data-name="legend">
+<rect class="b-sys" x="24" y="1180" width="22" height="14" rx="3"/>
+<text class="t-leg" x="54" y="1192">In scope</text>
+<rect class="b-per" x="110.8" y="1180" width="22" height="14" rx="3"/>
+<text class="t-leg" x="140.8" y="1192">Person</text>
+<rect class="b-mac" x="184.39999999999998" y="1180" width="22" height="14" rx="3"/>
+<text class="t-leg" x="214.39999999999998" y="1192">Macula infrastructure</text>
+<rect class="b-lib" x="357.0" y="1180" width="22" height="14" rx="3"/>
+<text class="t-leg" x="387.0" y="1192">Library</text>
+<rect class="b-ext" x="437.2" y="1180" width="22" height="14" rx="3"/>
+<text class="t-leg" x="467.2" y="1192">External system</text>
+<rect class="b-cmp" x="570.2" y="1180" width="22" height="14" rx="3"/>
+<text class="t-leg" x="600.2" y="1192">Container or component</text>
+<rect class="bound" x="749.4000000000001" y="1180" width="22" height="14" rx="3"/>
+<text class="t-leg" x="779.4000000000001" y="1192">Boundary</text>
+</g>
+</svg>

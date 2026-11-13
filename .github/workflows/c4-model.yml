@@ -1,7 +1,7 @@
 # The service's C4 model: what it talks to, and what it is made of
-# (macula-codebase-checks#10). Two diagrams in assets/, a context one and a
-# component one, each shown by README.md or architecture/README.md, and this
-# workflow red until they are there.
+# (macula-codebase-checks#10). Three diagrams in assets/, a context one, a
+# container one and a component one, each shown by README.md or
+# architecture/README.md, and this workflow red until they are there.
 #
 # WHY ITS OWN FILE. The model is the reader's, not the deploy's: the
 # mcl_service template keeps it out of the image's path on purpose, so a red
@@ -28,4 +28,4 @@ jobs:
   c4-model:
     permissions:
       contents: read
-    uses: macula-io/macula-ci-images/.github/workflows/c4-model.yml@c91235da28889b965cf39e607b28e785862e7552
+    uses: macula-io/macula-ci-images/.github/workflows/c4-model.yml@b268b87644ae0256a20e259bd7e286e8c98b303c

@@ -4,6 +4,7 @@ Run:  python3 architecture/c4_diagrams.py
 
   c4-context.svg     Level 1: what the service talks to
   c4-containers.svg  Level 2: what it is made of
+  c4-components.svg  Level 3: inside the command application
 
 Drawn from the code, never from a template: the callbacks in
 mcl_bookclub_service.erl, the boot in mcl_bookclub_app.erl, the store wiring in
@@ -297,6 +298,70 @@ def containers():
     d.write()
 
 
+def components():
+    """Level 3: inside host_bookclub, the command application. Nine desks on four
+    aggregates, one policy, three emitters, drawn from apps/host_bookclub/src."""
+    d = Diagram("c4-components.svg", "mcl-bookclub components: the command application", 1400, 1210)
+    X = (56, 376, 696, 1016)  # four columns, one per aggregate
+    # Outside the container, above: where commands come in and where events go.
+    d.box("b-cmp", X[0], 60, 300, 120, "mcl_bookclub_admin", "[cowboy listener, mcl_bookclub app]",
+          ["Nine POST routes, one per desk,", "each through the desk's _api module"], code=True)
+    d.box("b-cmp", X[1], 60, 300, 120, "mcl_bookclub_store", "[reckon-db store, mcl_bookclub app]",
+          ["One stream per club, member, book", "and reading; its $all subscription", "feeds every handler"], code=True)
+    d.bound(40, 216, 1300, 760, "host_bookclub [Container] - the command application: nine desks, four aggregates, one policy, three emitters")
+    # Row 1: the desks, grouped by the aggregate they address. A desk is four
+    # modules: _api entry, _v1 command, maybe_ handler, _v1 event.
+    d.box("b-cmp", X[0], 252, 300, 136, "three club desks", "[desk: _api, _v1, maybe_, event]",
+          ["initiate_bookclub -> bookclub_initiated_v1", "plan_party -> party_planned_v1", "archive_bookclub -> bookclub_archived_v1"], code=True)
+    d.box("b-cmp", X[1], 252, 300, 136, "two member desks", "[desk: _api, _v1, maybe_, event]",
+          ["register_member -> member_registered_v1", "unregister_member -> member_unregistered_v1"], code=True)
+    d.box("b-cmp", X[2], 252, 300, 136, "two book desks", "[desk: _api, _v1, maybe_, event]",
+          ["procure_book -> book_procured_v1", "retire_book -> book_retired_v1"], code=True)
+    d.box("b-cmp", X[3], 252, 300, 136, "two reading desks", "[desk: _api, _v1, maybe_, event]",
+          ["start_reading -> reading_started_v1", "finish_reading -> reading_finished_v1"], code=True)
+    # Row 2: the aggregates, one stream each, each with a blanket lifecycle guard.
+    d.box("b-cmp", X[0], 440, 300, 136, "bookclub_aggregate", "[evoq_aggregate, bookclub_state]",
+          ["One stream per club. Refuses every", "command once archived, before any", "desk sees it; status is bit flags"], code=True)
+    d.box("b-cmp", X[1], 440, 300, 136, "member_aggregate", "[evoq_aggregate, member_state]",
+          ["One stream per member. Refuses", "every command once unregistered;", "the member id is minted by the caller"], code=True)
+    d.box("b-cmp", X[2], 440, 300, 136, "book_aggregate", "[evoq_aggregate, book_state]",
+          ["One stream per book on the shelf.", "Refuses every command once retired"], code=True)
+    d.box("b-cmp", X[3], 440, 300, 136, "reading_aggregate", "[evoq_aggregate, reading_state]",
+          ["One stream per reading, the child", "of a member and a book. Refuses", "every command once finished"], code=True)
+    # Row 3: what reacts to events: the policy and the emitters.
+    d.box("b-cmp", X[0], 628, 620, 136, "on_member_registered_v1_maybe_plan_party", "[policy: evoq_event_handler, replay skip]",
+          ["Every fifth member_registered_v1 dispatches plan_party_v1 to the", "club's stream. The counter is in-memory, so the cadence is", "best-effort entertainment, not a business invariant"], code=True)
+    d.box("b-cmp", X[2], 628, 620, 136, "three emitters", "[emit_*_v1_to_mesh: evoq_event_handler, replay skip]",
+          ["emit_member_registered_v1_to_mesh, emit_book_procured_v1_to_mesh and", "emit_book_retired_v1_to_mesh: each event becomes one fact on the mesh. A failed", "publish is an error return, so evoq's retry owns redelivery"], code=True)
+    # Row 4: the application, its supervisor, and the one module that names the mesh.
+    d.box("b-cmp", X[0], 816, 300, 136, "host_bookclub_app", "[OTP application]",
+          ["start/2 starts host_bookclub_sup"], code=True)
+    d.box("b-cmp", X[1], 816, 300, 136, "host_bookclub_sup", "[supervisor, one_for_one]",
+          ["Four children: the policy and the", "three emitters. Aggregates start on", "demand under evoq's own supervisors"], code=True)
+    d.box("b-cmp", X[2], 816, 620, 136, "mcl_bookclub_facts", "[the mesh contract: three facts]",
+          ["Topic per fact kind; club_id and club_name in every payload, never in", "the topic; text as CBOR text, booleans as 1/0. Only it and the emitters", "may name the mesh SDK, and the department-boundary test enforces it"], code=True)
+    # Outside the container, below: the mesh the facts leave on.
+    d.box("b-mac", X[2], 1000, 620, 104, "Macula mesh", "[through mcl_om and macula]",
+          ["macula:publish on the fact topic, with the pool and realm mcl_om holds"])
+    # The wiring.
+    d.edge(f"M{X[0] + 150} 180V252", "POST, through the desk's _api:handle/1", X[0] + 158, 204)
+    d.edge(f"M{X[0] + 150} 388V440", "maybe_*:dispatch/1 to the club's stream", X[0] + 158, 420)
+    d.edge(f"M{X[1] + 150} 388V440", "to the member's stream", X[1] + 158, 420)
+    d.edge(f"M{X[2] + 150} 388V440", "to the book's stream", X[2] + 158, 420)
+    d.edge(f"M{X[3] + 150} 388V440", "to the reading's stream", X[3] + 158, 420)
+    d.edge(f"M{X[1] + 300} 120H1370V696H{X[3] + 300}", "the $all subscription delivers every event to the four handlers", 1384, 420, anchor="middle", rotate=90)
+    d.edge(f"M{X[0]} 696H20V320H{X[0]}", "every fifth registration: plan_party_v1 to the club desks", 14, 520, anchor="middle", rotate=-90)
+    d.edge(f"M{X[2] + 310} 764V816", "builds the fact, picks the topic", X[2] + 318, 796)
+    d.edge(f"M{X[2] + 310} 952V1000", "publishes", X[2] + 318, 982)
+    d.edge(f"M{X[0] + 300} 884H{X[1]}", "starts", X[0] + 300 + 4, 876)
+    d.edge(f"M{X[1] + 150} 816V764", "supervises", X[1] + 158, 796)
+    d.note(56, 1140, ["Every event a desk produces is appended to its aggregate's stream in mcl_bookclub_store (the mcl_bookclub app), and the",
+                      "store's $all subscription hands it to the policy and the emitters here and to the eight projections in project_bookclub."],
+           "events go to the stream, then to every handler")
+    d.legend(1180)
+    d.write()
+
+
 if __name__ == "__main__":
-    for make in (context, containers):
+    for make in (context, containers, components):
         make()
