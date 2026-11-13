@@ -14,7 +14,7 @@
 %% translate, nobody else). Text travels as CBOR text, booleans as 1/0.
 %%
 %% This module and the emit_* desks are the ONLY host_bookclub modules that
-%% may name the mesh SDK; the division-boundary test enforces it.
+%% may name the mesh SDK; the department-boundary test enforces it.
 -module(mcl_bookclub_facts).
 
 -export([member_registered/1, book_procured/1, book_retired/1,

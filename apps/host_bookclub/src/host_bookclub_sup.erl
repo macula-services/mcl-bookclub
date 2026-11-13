@@ -1,4 +1,4 @@
-%% @doc Supervises the CMD division's own processes.
+%% @doc Supervises the CMD department's own processes.
 %%
 %% Aggregates are started on demand by evoq's own partition supervisors when
 %% a command targets them -- they never appear in a service supervisor. What

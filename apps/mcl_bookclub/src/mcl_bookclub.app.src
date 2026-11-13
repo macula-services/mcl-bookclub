@@ -16,7 +16,7 @@
         %% The LAN admin UI's listener and codec.
         cowboy,
         jsx,
-        %% The three divisions, in boot order: their projections and stores
+        %% The three departments, in boot order: their projections and stores
         %% register before mcl_bookclub_app starts the store subscription, so a
         %% restart's catch-up replay finds every consumer already listening.
         host_bookclub,

@@ -1,4 +1,4 @@
-%% @doc Supervises the PRJ division: the sqlite read-model store and one
+%% @doc Supervises the PRJ department: the sqlite read-model store and one
 %% evoq_event_handler child per projection desk.
 %%
 %% The projection registers itself with evoq's event-type registry when it

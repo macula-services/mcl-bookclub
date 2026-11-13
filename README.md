@@ -21,14 +21,14 @@ on the macula mesh through mcl_om. The teaching service.**
 This repository is the worked example for building a `macula-services/mcl-*`
 service on [reckon-db](https://github.com/reckon-db-org/reckon-db) +
 [evoq](https://github.com/reckon-db-org/evoq), following the house rules:
-CMD / PRJ / QRY divisions, business-verb event names, bit-flag statuses,
+CMD / PRJ / QRY departments, business-verb event names, bit-flag statuses,
 idempotent projections, and a mesh facade that stays out of the domain code.
 Read it end to end; every convention it follows is explained where it is used,
 and every rule that protects a decision is a test.
 
-## The divisions
+## The departments
 
-| App | Division | Responsibility |
+| App | Department | Responsibility |
 |---|---|---|
 | `apps/mcl_bookclub` | the facade | the `mcl_om_service` contract: identity, `/health`, capabilities, and the store wiring. The only app that touches the mesh. |
 | `apps/host_bookclub` | CMD | commands, events, aggregates, policies. Depends on evoq and reckon, nothing else. |
@@ -62,7 +62,7 @@ reckon-db store:
   read path, the store wiring, and the first mesh capability,
   `mcl-bookclub/get_bookclub_by_id`.
 
-Each division's boundary is a test, not a convention: CMD may name the mesh
+Each department's boundary is a test, not a convention: CMD may name the mesh
 SDK only in the emitter desks and the facts module, PRJ and QRY name it
 nowhere, and the schema-contract test pins every QRY column to the PRJ DDL.
 
@@ -72,7 +72,7 @@ nowhere, and the schema-contract test pins every QRY column to the PRJ DDL.
    subscription guarantees, and what projections must do for themselves.
 2. `apps/host_bookclub/` — the write side: command → aggregate → event.
 3. `apps/project_bookclub/` — the read side: event → sqlite, idempotently.
-4. `apps/query_bookclub/` — the answers, and the division-boundary test.
+4. `apps/query_bookclub/` — the answers, and the department-boundary test.
 5. `apps/mcl_bookclub/` — the mesh facade and the service-contract tests.
 
 ## Running it

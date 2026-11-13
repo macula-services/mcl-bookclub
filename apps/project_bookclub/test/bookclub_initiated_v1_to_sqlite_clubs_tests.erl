@@ -22,8 +22,8 @@ store_test_() ->
 
 schema_contract_test_() ->
     [fun the_query_columns_are_all_in_the_prj_schema/0,
-     fun the_prj_division_imports_no_mesh_module/0,
-     fun the_prj_division_writes_no_status_literal/0].
+     fun the_prj_department_imports_no_mesh_module/0,
+     fun the_prj_department_writes_no_status_literal/0].
 
 %% The Demon 68 boundary, as a mechanism: a readable-status literal
 %% spelled out as a single-quoted SQL value ('active', 'archived',
@@ -34,7 +34,7 @@ schema_contract_test_() ->
 %% in event-type names ("book_retired_v1") and column names
 %% ("finished_at"); a status VALUE is always a quoted literal. Comments
 %% count too: naming the literal in prose is how the drift starts.
-the_prj_division_writes_no_status_literal() ->
+the_prj_department_writes_no_status_literal() ->
     lists:foreach(
       fun(Src) ->
               {ok, Text} = file:read_file(Src),
@@ -115,7 +115,7 @@ an_archived_club_moves_the_row_to_archived() ->
     ?assertEqual(<<"bookclub_archived_v1">>, Stored#event.event_type).
 
 %% THE SCHEMA CONTRACT, AS A MECHANISM, over every query desk. The QRY
-%% division selects columns the PRJ division declares; the only copy of the
+%% department selects columns the PRJ department declares; the only copy of the
 %% truth is bookclub_read_model_store:schema/0. This parses each desk's
 %% SELECT, extracts its columns AND its table, and refuses any column the
 %% matching CREATE TABLE does not declare -- including a `SELECT *'.
@@ -154,9 +154,9 @@ table_ddl(Schema, Table) ->
         nomatch -> <<>>
     end.
 
-%% The division boundary, as a mechanism rather than a convention: the PRJ
+%% The department boundary, as a mechanism rather than a convention: the PRJ
 %% sources must not name a mesh module. Comments count.
-the_prj_division_imports_no_mesh_module() ->
+the_prj_department_imports_no_mesh_module() ->
     lists:foreach(
       fun(Forbidden) ->
               lists:foreach(

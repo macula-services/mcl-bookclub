@@ -5,6 +5,25 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- **CMD, PRJ and QRY are departments**, as the corpus names them (the division is
+  the club itself, the one bounded context). Every comment, test name, app
+  description, page and the components picture said "division" for them; the
+  word is now "department" throughout, and the second C4 picture is redrawn by
+  `architecture/c4_diagrams.py` with the three boxes labelled so. No code path
+  changes.
+- **The second C4 picture is the containers**, C4's level 2: the release is the
+  software system and its four applications are the containers. The file is
+  `assets/c4-containers.svg` (was `c4-components.svg`), its frame says so, and
+  the architecture page's section is "Level 2: containers".
+- **A third C4 picture, the components** of the command application:
+  `assets/c4-components.svg`, drawn by the same script from
+  `apps/host_bookclub/src`, with the nine desks on their four aggregates, the
+  policy, the three emitters and the facts module; "Level 3: components" on the
+  architecture page. The house C4 check, now pinned at its current commit, asks
+  a service for its Context, Container and Component pictures.
+
 ## 0.4.0 - 2026-10-30
 
 - **On macula 18 / mcl_om 1.6** (macula-io/macula#147, mcl-om#41), with

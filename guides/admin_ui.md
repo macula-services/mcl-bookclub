@@ -23,7 +23,7 @@ static files). Three consequences worth noticing:
    (or member/book/reading id) is minted there and echoed back in the
    event, so the UI's task log always shows the operator the id the task
    created.
-3. **The divisions stay pure.** The api modules import no cowboy and no
+3. **The departments stay pure.** The api modules import no cowboy and no
    mesh SDK — the CMD boundary test keeps it that way.
 
 ## Routes
@@ -42,7 +42,7 @@ Writes follow the corpus's route shapes, `POST /api/{plural}/{verb}`:
 | Start a reading | `POST /api/readings/start` |
 | Finish a reading | `POST /api/readings/finish` |
 
-Reads answer from the QRY division, `GET /api/{plural}/:id` — plus
+Reads answer from the QRY department, `GET /api/{plural}/:id` — plus
 `GET /api/members/:id/readings`. A successful write answers
 `{ok: true, version, events}` with the minted ids in the events; a refused
 one answers `400 {ok: false, error}` — the aggregate's own reason.

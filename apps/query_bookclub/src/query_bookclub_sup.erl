@@ -1,4 +1,4 @@
-%% @doc Supervises the QRY division: the sqlite query store.
+%% @doc Supervises the QRY department: the sqlite query store.
 %%
 %% One child today. Every later query desk is a pure module answered by the
 %% store, not a process -- the desks hold no state of their own.

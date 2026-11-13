@@ -1,4 +1,4 @@
-%% @doc OTP application entry for the CMD division.
+%% @doc OTP application entry for the CMD department.
 -module(host_bookclub_app).
 
 -behaviour(application).

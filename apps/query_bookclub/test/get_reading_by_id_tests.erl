@@ -1,9 +1,9 @@
 %% @doc get_reading_by_id and get_readings_by_member, against the sqlite
 %% read model.
 %%
-%% The test opens the same file the PRJ division writes and creates the
+%% The test opens the same file the PRJ department writes and creates the
 %% schema from bookclub_read_model_store:schema/0 -- it STANDS IN for the
-%% PRJ division having run, it does not duplicate the DDL.
+%% PRJ department having run, it does not duplicate the DDL.
 -module(get_reading_by_id_tests).
 
 -include_lib("eunit/include/eunit.hrl").

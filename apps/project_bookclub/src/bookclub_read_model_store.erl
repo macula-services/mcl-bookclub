@@ -1,9 +1,9 @@
-%% @doc The PRJ division's sqlite store: one gen_server owning one esqlite
+%% @doc The PRJ department's sqlite store: one gen_server owning one esqlite
 %% connection.
 %%
 %% A NIF connection belongs to the process that opened it, so every write
 %% goes through this process. The DDL lives here and ONLY here -- the QRY
-%% division reads the schema this module creates, and a schema-contract test
+%% department reads the schema this module creates, and a schema-contract test
 %% pins the columns QRY selects to the columns this module declares.
 %%
 %% All writes are single statements. A projected event is one INSERT OR

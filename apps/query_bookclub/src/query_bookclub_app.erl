@@ -1,4 +1,4 @@
-%% @doc OTP application entry for the QRY division.
+%% @doc OTP application entry for the QRY department.
 -module(query_bookclub_app).
 
 -behaviour(application).

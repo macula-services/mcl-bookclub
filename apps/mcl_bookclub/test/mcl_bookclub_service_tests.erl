@@ -56,9 +56,9 @@ info_version_matches_the_application_test() ->
     ?assertEqual(list_to_binary(Vsn), Reported).
 
 %% The service's health IS the health of its read path: degraded until the
-%% division stores are up, ok with them. One test, in that order, so the
+%% department stores are up, ok with them. One test, in that order, so the
 %% assertion never depends on another test's leftovers.
-health_probes_the_division_stores_test() ->
+health_probes_the_department_stores_test() ->
     ?assertMatch({degraded, _}, ?SERVICE:health()),
     DataDir = tmp_dir(),
     os:putenv("MCL_DATA_DIR", DataDir),
@@ -210,7 +210,7 @@ the_data_directory_is_answerable_test() ->
     ?assertNotEqual("", Dir).
 
 %% THE STORE IS THIS SERVICE'S OWN (mcl_om opens none from 0.35): mcl_bookclub_app
-%% opens it before mcl_om:boot/1, and the divisions, which start first, are
+%% opens it before mcl_om:boot/1, and the departments, which start first, are
 %% already listening when its subscription replays.
 the_store_is_opened_before_the_service_boots_test() ->
     {ok, App} = file:read_file(alongside("apps/mcl_bookclub/src/mcl_bookclub_app.erl")),
@@ -235,10 +235,10 @@ store_id() -> maps:get(id, ?SERVICE:event_store()).
 data_dir() -> maps:get(dir, ?SERVICE:event_store()).
 
 %% THE SQLITE PATH IS A THIRD PLACE, shared by three modules: the facade's
-%% data_dir/0 default and the two division supervisors that derive the sqlite
+%% data_dir/0 default and the two department supervisors that derive the sqlite
 %% file from the same variable. Nothing makes them agree by themselves, so
 %% this pins the default string into all three.
-the_sqlite_default_matches_between_the_facade_and_the_divisions_test() ->
+the_sqlite_default_matches_between_the_facade_and_the_departments_test() ->
     os:unsetenv("MCL_DATA_DIR"),
     ?assertEqual("/tmp/mcl_bookclub", data_dir()),
     lists:foreach(

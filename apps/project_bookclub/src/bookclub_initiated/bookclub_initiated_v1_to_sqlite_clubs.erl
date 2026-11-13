@@ -15,7 +15,7 @@
 %%   the projected data in the same statement.
 %% - The status string is NOT a literal of this file's own: it comes from
 %%   bookclub_status:to_string/1, the flag map the status module owns --
-%%   the raw bit flags never leave the CMD division, and neither do the
+%%   the raw bit flags never leave the CMD department, and neither do the
 %%   names (Demon 68).
 -module(bookclub_initiated_v1_to_sqlite_clubs).
 

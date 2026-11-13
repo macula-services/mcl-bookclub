@@ -1,4 +1,4 @@
-%% @doc OTP application entry for the PRJ division.
+%% @doc OTP application entry for the PRJ department.
 %%
 %% Starting this app opens the sqlite read model and registers the
 %% projections with evoq's event-type registry. The store subscription that
