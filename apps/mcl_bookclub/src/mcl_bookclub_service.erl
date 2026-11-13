@@ -9,8 +9,8 @@
 %%
 %% The facade is the only app in this repository that knows the mesh exists:
 %% capabilities/0 will name QRY's query modules as procedures once those
-%% procedures exist, and health/0 probes the division stores. The three
-%% division apps import neither macula nor mcl_om.
+%% procedures exist, and health/0 probes the department stores. The three
+%% department apps import neither macula nor mcl_om.
 -module(mcl_bookclub_service).
 
 -behaviour(mcl_om_service).
@@ -28,7 +28,7 @@ start(_Opts) -> mcl_bookclub_sup:start_link().
 stop(_State) -> ok.
 
 %% The service's health IS the health of its read path: the two sqlite store
-%% processes the divisions run. Their absence or silence means the club's
+%% processes the departments run. Their absence or silence means the club's
 %% record is unreachable, however healthy the rest of the node looks.
 health() ->
     case {ping(bookclub_read_model_store), ping(bookclub_query_store)} of
@@ -79,12 +79,12 @@ identity_spec() ->
 %% `id': NAMED IN TWO PLACES, here and in the `evoq' block of
 %% `config/sys.config.src', and nothing makes them agree by itself. Disagreeing
 %% opens one store and addresses another. A test compares the two. The CMD
-%% division names the same store when it dispatches -- see
+%% department names the same store when it dispatches -- see
 %% maybe_initiate_bookclub:dispatch/1.
 %%
 %% `dir': where the record lives on disk: the reckon-db store at
 %% <dir>/mcl_bookclub_store and the sqlite read model at <dir>/bookclub.sqlite3.
-%% Both division stores derive their paths from the same variable, with the same
+%% Both department stores derive their paths from the same variable, with the same
 %% default as here; a test pins the three defaults together. DEFAULTS TO
 %% /tmp/mcl_bookclub, which is what a laptop wants. A container without the
 %% compose volume loses the club's record on every recreate.

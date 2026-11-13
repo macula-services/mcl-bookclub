@@ -5,7 +5,7 @@
 %% mcl_om:boot/1 wire the mesh, the realm identity, capabilities and health and
 %% start the service. mcl_om opens no store (0.35, mcl-om#10).
 %%
-%% The three divisions start before this app does (they are listed in the
+%% The three departments start before this app does (they are listed in the
 %% .app.src applications tuple), so by the time the store subscription starts
 %% its catch-up replay here, every projection and query store is already
 %% registered and listening.

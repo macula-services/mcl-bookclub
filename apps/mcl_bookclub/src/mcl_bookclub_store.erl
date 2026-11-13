@@ -1,5 +1,5 @@
 %% @doc This service's reckon-db store, opened by mcl_bookclub_app BEFORE
-%% mcl_om:boot/1, so the divisions, already started, find it up.
+%% mcl_om:boot/1, so the departments, already started, find it up.
 %%
 %% mcl-bookclub's own copy of the canonical wiring (from mcl_om 0.35 on, mcl_om
 %% opens no store; each service owns its persistence, mcl-om#10): start the

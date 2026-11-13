@@ -1,9 +1,9 @@
-%% @doc Shared store boot for the CMD division's desk suites.
+%% @doc Shared store boot for the CMD department's desk suites.
 %%
 %% Opens the same store a running node has, through the same call the
 %% facade's boot makes (reckon_db_sup:start_store/1 with the service's
 %% store config), so a desk test's dispatch, aggregate, event and stream
-%% are the ones production sees. The CMD division touches no mesh code --
+%% are the ones production sees. The CMD department touches no mesh code --
 %% not even in tests -- so the store is opened directly.
 -module(host_bookclub_test_store).
 

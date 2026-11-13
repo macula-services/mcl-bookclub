@@ -8,7 +8,7 @@ Run:  python3 architecture/c4_diagrams.py
 Drawn from the code, never from a template: the callbacks in
 mcl_bookclub_service.erl, the boot in mcl_bookclub_app.erl, the store wiring in
 mcl_bookclub_store.erl, the admin routes in mcl_bookclub_admin.erl, the three
-division supervisors, the dependencies in rebar.config, the port and volumes in
+department supervisors, the dependencies in rebar.config, the port and volumes in
 the Containerfile and deploy/docker-compose.yml. When one of those changes, the
 diagram changes in the same commit.
 
@@ -212,7 +212,7 @@ def components():
     d.box("b-cmp", 952, 76, 340, 136, "mcl_bookclub_sup", "[supervisor, one_for_one]",
           ["One child, the LAN admin listener.",
            "Aggregates, the stores and the handlers",
-           "live in their own divisions"], code=True)
+           "live in their own departments"], code=True)
     # Row 2: the mesh face, the store, the admin UI.
     d.box("b-sys", 32, 272, 340, 136, "mcl_bookclub_get_bookclub_by_id", "[macula_response provider]",
           ["handle_request/2 unwraps club_id and",
@@ -226,22 +226,22 @@ def components():
           ["Nine POST routes through each desk's _api",
            "entry point, five GET routes through the",
            "QRY desks; MCL_ADMIN_PORT, JSON by jsx"], code=True)
-    # Row 3: the three divisions.
-    d.box("b-cmp", 32, 468, 340, 180, "query_bookclub", "[QRY division]",
+    # Row 3: the three departments.
+    d.box("b-cmp", 32, 468, 340, 180, "query_bookclub", "[QRY department]",
           ["bookclub_query_store: one esqlite",
            "connection, q/2 only, so a query desk",
            "cannot write. Five pure desks:",
            "get_bookclub_by_id, get_member_by_id,",
            "get_book_by_id, get_reading_by_id,",
            "get_readings_by_member"], code=True)
-    d.box("b-cmp", 492, 468, 340, 180, "project_bookclub", "[PRJ division]",
+    d.box("b-cmp", 492, 468, 340, 180, "project_bookclub", "[PRJ department]",
           ["bookclub_read_model_store owns the DDL",
            "and every write; eight projections, one",
            "evoq_event_handler each, one INSERT OR",
            "REPLACE per event, so a replay of the",
            "log writes the same rows again",
            "idempotently"], code=True)
-    d.box("b-cmp", 952, 468, 340, 180, "host_bookclub", "[CMD division]",
+    d.box("b-cmp", 952, 468, 340, 180, "host_bookclub", "[CMD department]",
           ["Nine desks: initiate, archive, register,",
            "unregister, procure, retire, start and",
            "finish reading, plan_party; the",
@@ -272,7 +272,7 @@ def components():
            "to the process that opened it"], code=True)
     # The host's environment.
     d.box("b-ext", 32, 936, 600, 104, "MCL_DATA_DIR", "[environment, /data in the image]",
-          ["read by event_store/0 and by both division",
+          ["read by event_store/0 and by both department",
            "supervisors; the log and the read model live under it"], code=True)
     d.box("b-ext", 652, 936, 640, 104, "MCL_ADMIN_PORT", "[environment, 8488 by default]",
           ["the cowboy listener binds every interface: the admin",

@@ -2,7 +2,7 @@
 %%
 %% The store is opened by host_bookclub_test_store with the same call the
 %% facade's boot makes for this service, so the dispatch, the aggregate, the
-%% event and its stream are the ones a running node has. The CMD division
+%% event and its stream are the ones a running node has. The CMD department
 %% touches no mesh code -- not even in tests.
 -module(initiate_bookclub_tests).
 
@@ -22,7 +22,7 @@ pure_test_() ->
      fun a_minted_club_id_satisfies_the_stream_contract/0,
      fun the_state_folds_both_event_shapes/0,
      fun the_state_round_trips_through_a_map/0,
-     fun the_cmd_division_imports_no_mesh_module_outside_the_emitters_test/0].
+     fun the_cmd_department_imports_no_mesh_module_outside_the_emitters_test/0].
 
 a_club_is_initiated_on_its_own_stream() ->
     {ok, Cmd} = club(),
@@ -104,12 +104,12 @@ the_state_round_trips_through_a_map() ->
     ?assert(bookclub_state:is_initiated(S2)),
     ?assertEqual(7, bookclub_state:initiated_at(S2)).
 
-%% The division boundary, as a mechanism rather than a convention: the CMD
+%% The department boundary, as a mechanism rather than a convention: the CMD
 %% sources must not name the read-model store, and the mesh SDK may appear
 %% ONLY in the emitter desks and the facts module -- the named places where
 %% the domain meets the mesh. Comments count: naming the thing in prose is
 %% how the drift starts.
-the_cmd_division_imports_no_mesh_module_outside_the_emitters_test() ->
+the_cmd_department_imports_no_mesh_module_outside_the_emitters_test() ->
     lists:foreach(
       fun(Src) ->
               {ok, Text} = file:read_file(Src),

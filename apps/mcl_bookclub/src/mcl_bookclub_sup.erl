@@ -1,6 +1,6 @@
 %% @doc Supervises this service's own processes: the LAN admin listener.
 %%
-%% Every other process the service runs lives in a division: aggregates are
+%% Every other process the service runs lives in a department: aggregates are
 %% started on demand by evoq (CMD), the read-model store and projections
 %% live in project_bookclub_sup (PRJ), the query store in
 %% query_bookclub_sup (QRY). The facade owns the mesh-facing contract and

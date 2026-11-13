@@ -1,5 +1,5 @@
-%% @doc Shared environment for the PRJ division's desk suites: a real
-%% reckon-db store, the $all subscription, the division apps (sqlite store
+%% @doc Shared environment for the PRJ department's desk suites: a real
+%% reckon-db store, the $all subscription, the department apps (sqlite store
 %% + projections), and the helpers the suites share.
 %%
 %% This is the whole released pipeline -- dispatch, subscription, router,

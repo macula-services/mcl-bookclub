@@ -73,7 +73,7 @@
 <text class="t-type" x="968" y="122">[supervisor, one_for_one]</text>
 <text class="t-desc" x="968" y="146">One child, the LAN admin listener.</text>
 <text class="t-desc" x="968" y="162">Aggregates, the stores and the handlers</text>
-<text class="t-desc" x="968" y="178">live in their own divisions</text>
+<text class="t-desc" x="968" y="178">live in their own departments</text>
 </g>
 <g class="k-box" data-name="mcl_bookclub_get_bookclub_by_id" data-kind="b-sys" data-x="32" data-y="272" data-w="340" data-h="136">
 <rect class="b-sys" x="32" y="272" width="340" height="136" rx="10"/>
@@ -102,7 +102,7 @@
 <g class="k-box" data-name="query_bookclub" data-kind="b-cmp" data-x="32" data-y="468" data-w="340" data-h="180">
 <rect class="b-cmp" x="32" y="468" width="340" height="180" rx="10"/>
 <text class="t-code" x="48" y="496">query_bookclub</text>
-<text class="t-type" x="48" y="514">[QRY division]</text>
+<text class="t-type" x="48" y="514">[QRY department]</text>
 <text class="t-desc" x="48" y="538">bookclub_query_store: one esqlite</text>
 <text class="t-desc" x="48" y="554">connection, q/2 only, so a query desk</text>
 <text class="t-desc" x="48" y="570">cannot write. Five pure desks:</text>
@@ -113,7 +113,7 @@
 <g class="k-box" data-name="project_bookclub" data-kind="b-cmp" data-x="492" data-y="468" data-w="340" data-h="180">
 <rect class="b-cmp" x="492" y="468" width="340" height="180" rx="10"/>
 <text class="t-code" x="508" y="496">project_bookclub</text>
-<text class="t-type" x="508" y="514">[PRJ division]</text>
+<text class="t-type" x="508" y="514">[PRJ department]</text>
 <text class="t-desc" x="508" y="538">bookclub_read_model_store owns the DDL</text>
 <text class="t-desc" x="508" y="554">and every write; eight projections, one</text>
 <text class="t-desc" x="508" y="570">evoq_event_handler each, one INSERT OR</text>
@@ -124,7 +124,7 @@
 <g class="k-box" data-name="host_bookclub" data-kind="b-cmp" data-x="952" data-y="468" data-w="340" data-h="180">
 <rect class="b-cmp" x="952" y="468" width="340" height="180" rx="10"/>
 <text class="t-code" x="968" y="496">host_bookclub</text>
-<text class="t-type" x="968" y="514">[CMD division]</text>
+<text class="t-type" x="968" y="514">[CMD department]</text>
 <text class="t-desc" x="968" y="538">Nine desks: initiate, archive, register,</text>
 <text class="t-desc" x="968" y="554">unregister, procure, retire, start and</text>
 <text class="t-desc" x="968" y="570">finish reading, plan_party; the</text>
@@ -179,7 +179,7 @@
 <rect class="b-ext" x="32" y="936" width="600" height="104" rx="10"/>
 <text class="t-code" x="48" y="964">MCL_DATA_DIR</text>
 <text class="t-type" x="48" y="982">[environment, /data in the image]</text>
-<text class="t-desc" x="48" y="1006">read by event_store/0 and by both division</text>
+<text class="t-desc" x="48" y="1006">read by event_store/0 and by both department</text>
 <text class="t-desc" x="48" y="1022">supervisors; the log and the read model live under it</text>
 </g>
 <g class="k-box" data-name="MCL_ADMIN_PORT" data-kind="b-ext" data-x="652" data-y="936" data-w="640" data-h="104">

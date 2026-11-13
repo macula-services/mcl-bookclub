@@ -5,6 +5,15 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+- **CMD, PRJ and QRY are departments**, as the corpus names them (the division is
+  the club itself, the one bounded context). Every comment, test name, app
+  description, page and the components picture said "division" for them; the
+  word is now "department" throughout, and `assets/c4-components.svg` is redrawn
+  by `architecture/c4_diagrams.py` with the three boxes labelled so. No code
+  path changes.
+
 ## 0.4.0 - 2026-10-30
 
 - **On macula 18 / mcl_om 1.6** (macula-io/macula#147, mcl-om#41), with

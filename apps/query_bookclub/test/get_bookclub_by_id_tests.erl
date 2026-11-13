@@ -1,8 +1,8 @@
 %% @doc get_bookclub_by_id, against the sqlite read model.
 %%
-%% The test opens the same file the PRJ division writes, creates the schema
+%% The test opens the same file the PRJ department writes, creates the schema
 %% from bookclub_read_model_store:schema/0 -- the test STANDS IN for the PRJ
-%% division having run, it does not duplicate the DDL -- and seeds one row.
+%% department having run, it does not duplicate the DDL -- and seeds one row.
 -module(get_bookclub_by_id_tests).
 
 -include_lib("eunit/include/eunit.hrl").
@@ -16,8 +16,8 @@ store_test_() ->
       fun an_archived_club_is_found_with_its_status/0,
       fun a_non_binary_id_is_refused/0]}.
 
-division_boundary_test_() ->
-    [fun the_qry_division_imports_no_framework_or_mesh_module/0].
+department_boundary_test_() ->
+    [fun the_qry_department_imports_no_framework_or_mesh_module/0].
 
 a_known_club_is_found() ->
     ClubId = seed_club(<<"The Crooked Shelf">>),
@@ -44,10 +44,10 @@ an_archived_club_is_found_with_its_status() ->
 a_non_binary_id_is_refused() ->
     ?assertEqual({error, missing_club_id}, get_bookclub_by_id:find("the-crooked-shelf")).
 
-%% The division boundary, as a mechanism rather than a convention: the QRY
+%% The department boundary, as a mechanism rather than a convention: the QRY
 %% sources must not name a framework, a store or a mesh module. Comments
 %% count -- naming the thing in prose is how the drift starts.
-the_qry_division_imports_no_framework_or_mesh_module() ->
+the_qry_department_imports_no_framework_or_mesh_module() ->
     lists:foreach(
       fun(Forbidden) ->
               lists:foreach(

@@ -4,9 +4,9 @@
 of, without reading it.*
 
 **Status: the full domain, end to end.** One OTP release holds four apps: a facade
-that owns the mesh contract, a CMD division with nine desks, a policy and three mesh
-emitters, a PRJ division projecting eight events into one sqlite read model, and a
-QRY division answering from it. `mcl-bookclub/get_bookclub_by_id` is its own
+that owns the mesh contract, a CMD department with nine desks, a policy and three mesh
+emitters, a PRJ department projecting eight events into one sqlite read model, and a
+QRY department answering from it. `mcl-bookclub/get_bookclub_by_id` is its own
 procedure, and the only one; `mcl-om` adds `mcl-bookclub/info` and
 `mcl-bookclub/get_limits` to every service, both open, and `capabilities/0` is
 the list. The LAN admin UI runs on 8488; `/health` is served on a Unix socket.
@@ -37,19 +37,19 @@ query desk is answered from the local read model.
 | --- | --- | --- |
 | `mcl_bookclub_service` | Erlang, the `mcl_om_service` behaviour | The six callbacks `mcl_om` resolves by name at startup, plus `event_store/0`: `info/0`, `start/1`, `stop/1`, `health/0`, `capabilities/0`, `identity_spec/0` |
 | `mcl_bookclub_app` | OTP application | Opens this service's own reckon-db store from `event_store/0`, then lets `mcl_om:boot/1` wire the mesh, the realm identity, capabilities and health |
-| `mcl_bookclub_sup` | supervisor, `one_for_one` | One child, the LAN admin listener. Aggregates, the two stores and every handler live in their own divisions |
+| `mcl_bookclub_sup` | supervisor, `one_for_one` | One child, the LAN admin listener. Aggregates, the two stores and every handler live in their own departments |
 | `mcl_bookclub_get_bookclub_by_id` | `macula_response` RPC provider | `handle_request/2` unwraps `club_id` and answers from the QRY desk; strings go back as CBOR text and booleans as 1/0 |
 | `mcl_bookclub_store` | this service's reckon-db store wiring | Starts the store, waits up to 30 s until reckon_db lists it, then starts the `evoq_store_subscription` that feeds every handler in every app |
 | `mcl_bookclub_admin` | cowboy listener | Nine POST routes through each desk's `_api` entry point, five GET routes through the QRY desks. `MCL_ADMIN_PORT` (8488), JSON by jsx |
-| `query_bookclub` | QRY division | `bookclub_query_store`: one esqlite connection, `q/2` only, so a query desk cannot write. Five pure desks |
-| `project_bookclub` | PRJ division | `bookclub_read_model_store` owns the DDL and every write; eight projections, one `evoq_event_handler` each, one `INSERT OR REPLACE` per event, so a replay writes the same rows again idempotently |
-| `host_bookclub` | CMD division | Nine desks, the `on_member_registered_v1_maybe_plan_party` policy, and three `emit_*_v1_to_mesh` handlers |
+| `query_bookclub` | QRY department | `bookclub_query_store`: one esqlite connection, `q/2` only, so a query desk cannot write. Five pure desks |
+| `project_bookclub` | PRJ department | `bookclub_read_model_store` owns the DDL and every write; eight projections, one `evoq_event_handler` each, one `INSERT OR REPLACE` per event, so a replay writes the same rows again idempotently |
+| `host_bookclub` | CMD department | Nine desks, the `on_member_registered_v1_maybe_plan_party` policy, and three `emit_*_v1_to_mesh` handlers |
 | `mcl_om` | library, `~> 1.6` | `boot/1`: loads the node key, joins the realm, opens the QUIC pool through the pinned stations, registers the declared capability and serves `/health` |
 | `macula` | library, `~> 18.0` | QUIC transport, RPC dispatch to a provider by name, publishing on a fact topic, and the signed records the DHT holds |
 | `evoq` | library, `>= 1.26.1, < 2.0.0` | Dispatch, aggregates, the event-type registry, and the `$all` subscription that feeds every handler |
 | `reckon_db` + `reckon_evoq` | libraries, `~> 5.4` and `>= 2.7.2` | The event log on disk, and the adapter `evoq` reads it through |
 | `esqlite` | library, `~> 0.9` | One sqlite file per store; a NIF connection belongs to the process that opened it |
-| `MCL_DATA_DIR` | environment | Read by `event_store/0` and by both division supervisors. `/data` in the image, `<dir>/mcl_bookclub_store` and `<dir>/bookclub.sqlite3` under it |
+| `MCL_DATA_DIR` | environment | Read by `event_store/0` and by both department supervisors. `/data` in the image, `<dir>/mcl_bookclub_store` and `<dir>/bookclub.sqlite3` under it |
 | `MCL_ADMIN_PORT` | environment | The cowboy listener's port, 8488 in the Containerfile. It binds every interface: the admin UI is the box's LAN tool |
 | `MCL_REALM`, `MCL_REALM_KEY`, `MACULA_STATION_SEEDS`, `MACULA_STATION_NODE_IDS` | environment | The realm pair comes in through `config/sys.config.src`, which relx substitutes at boot; the station seeds and node ids are read from the environment by `mcl_om` itself. The compose file refuses to start without all four, so a half-configured node never announces itself |
 
@@ -67,7 +67,7 @@ other declares.
 `architecture/c4_diagrams.py` (`python3 architecture/c4_diagrams.py`), from the
 code and never from this page: the callbacks in `mcl_bookclub_service.erl`, the
 boot in `mcl_bookclub_app.erl`, the store wiring in `mcl_bookclub_store.erl`, the
-routes in `mcl_bookclub_admin.erl`, the three division supervisors, the
+routes in `mcl_bookclub_admin.erl`, the three department supervisors, the
 dependencies in `rebar.config`, the port and volumes in the `Containerfile` and
 `deploy/docker-compose.yml`. When one of those changes, the diagram changes in the
 same commit.

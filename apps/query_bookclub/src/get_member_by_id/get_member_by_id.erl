@@ -8,7 +8,7 @@
 -export([find/1]).
 
 %% @doc One member, or not_found. The row's cells arrive in SELECT order; the
-%% schema-contract test keeps that order aligned with the PRJ division's DDL.
+%% schema-contract test keeps that order aligned with the PRJ department's DDL.
 -spec find(binary()) -> {ok, map()} | {error, term()}.
 find(MemberId) when is_binary(MemberId) ->
     found(bookclub_query_store:q(

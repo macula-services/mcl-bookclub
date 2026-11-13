@@ -1,5 +1,5 @@
 {application, project_bookclub, [
-    {description, "mcl-bookclub PRJ division: events to the sqlite read model."},
+    {description, "mcl-bookclub PRJ department: events to the sqlite read model."},
     {vsn, "0.4.0"},
     {registered, [bookclub_read_model_store]},
     {mod, {project_bookclub_app, []}},

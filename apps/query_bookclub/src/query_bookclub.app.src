@@ -1,5 +1,5 @@
 {application, query_bookclub, [
-    {description, "mcl-bookclub QRY division: answers from the sqlite read model."},
+    {description, "mcl-bookclub QRY department: answers from the sqlite read model."},
     {vsn, "0.4.0"},
     {registered, [bookclub_query_store]},
     {mod, {query_bookclub_app, []}},

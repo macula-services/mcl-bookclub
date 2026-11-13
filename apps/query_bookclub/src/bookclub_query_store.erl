@@ -1,9 +1,9 @@
-%% @doc The QRY division's sqlite store: one gen_server owning one esqlite
+%% @doc The QRY department's sqlite store: one gen_server owning one esqlite
 %% connection.
 %%
 %% READ-ONLY BY API: only q/2 is exposed, so a query desk cannot write and a
-%% write path can never slip into the read division. The schema itself is
-%% owned by the PRJ division (bookclub_read_model_store:schema/0); this
+%% write path can never slip into the query department. The schema itself is
+%% owned by the PRJ department (bookclub_read_model_store:schema/0); this
 %% process opens the same file and assumes that schema exists. A
 %% schema-contract test pins the columns the query desks select to the
 %% columns PRJ declares, so the two sides cannot drift apart silently.
