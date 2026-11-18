@@ -1,0 +1,35 @@
+{
+  "division": "bookclub",
+  "lanes": ["Organiser", "Member"],
+  "clock": null,
+  "desks": [
+    { "name": "initiate_bookclub", "lane": "Organiser", "event": "bookclub_initiated_v1", "feeds": ["clubs"] },
+    { "name": "register_member", "lane": "Member", "event": "member_registered_v1", "feeds": ["members"] },
+    { "name": "procure_book", "lane": "Organiser", "event": "book_procured_v1", "feeds": ["books"] },
+    { "name": "start_reading", "lane": "Member", "event": "reading_started_v1", "feeds": ["readings"] },
+    { "name": "finish_reading", "lane": "Member", "event": "reading_finished_v1", "feeds": ["readings"] },
+    { "name": "plan_party", "lane": "Organiser", "event": "party_planned_v1", "feeds": [] },
+    { "name": "unregister_member", "lane": "Member", "event": "member_unregistered_v1", "feeds": ["members"] },
+    { "name": "retire_book", "lane": "Organiser", "event": "book_retired_v1", "feeds": ["books"] },
+    { "name": "archive_bookclub", "lane": "Organiser", "event": "bookclub_archived_v1", "feeds": ["clubs"] }
+  ],
+  "policies": [
+    { "on": ["member_registered_v1"], "maybe": "plan_party" }
+  ],
+  "read_models": [
+    { "table": "clubs", "questions": ["get_bookclub_by_id"] },
+    { "table": "members", "questions": ["get_member_by_id"] },
+    { "table": "books", "questions": ["get_book_by_id"] },
+    { "table": "readings", "questions": ["get_reading_by_id", "get_readings_by_member"] }
+  ],
+  "facts_that_leave": ["member_registered_v1", "book_procured_v1", "book_retired_v1"],
+  "facts_that_arrive": [],
+  "hot_spots": ["party_planned_v1"],
+  "clock_notes": [],
+  "dossiers": [
+    { "name": "club", "known": [] },
+    { "name": "member", "known": [] },
+    { "name": "book", "known": [] },
+    { "name": "reading", "known": [] }
+  ]
+}
