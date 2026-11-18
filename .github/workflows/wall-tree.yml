@@ -27,4 +27,4 @@ jobs:
   wall-tree:
     permissions:
       contents: read
-    uses: macula-io/macula-ci-images/.github/workflows/wall-tree.yml@f21838ea90eaa2ec501269eb3bfa6742da9c5538
+    uses: macula-io/macula-ci-images/.github/workflows/wall-tree.yml@8cccb4c12a096d5f15c1345f72867b388dcea323
