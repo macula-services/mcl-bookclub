@@ -1,0 +1,30 @@
+# The Division's tree holds exactly the folders its wall asks for
+# (mcl-whiteboard#14). wall.json in the root names the wall; the house's
+# wall-tree check maps it to the folders its three applications must have, and
+# fails naming every note with no folder and every folder no note asks for, so
+# the wall the group agreed on and the code built from it cannot drift apart
+# unnoticed.
+#
+# WHY ITS OWN FILE. The wall is the business's, not the deploy's: a red wall
+# must never block a publish, so it stays out of the lint workflow the image
+# job waits on, and out of the image workflow's path filters. It runs on every
+# pull request and every push to main, with no path filter, so a change that
+# touches only wall.json or a folder is exactly the change this must see.
+#
+# The check is the house's, pinned by full commit sha as every shared call is.
+
+name: wall tree
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  wall-tree:
+    permissions:
+      contents: read
+    uses: macula-io/macula-ci-images/.github/workflows/wall-tree.yml@f21838ea90eaa2ec501269eb3bfa6742da9c5538
